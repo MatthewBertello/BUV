@@ -14,12 +14,12 @@ enum Steppers                    // A list of the steppers
 Steppers stepperHoming = BRAKE; // The stepper that is currently being homed
 
 // Setup the RC inputs
-RcInput gasJoystick{RcInput::CENTER_JOYSTICK, config::GAS_JOYSTICK_INPUT_PIN};            // The joystick for the gas/brake
-RcInput steeringJoystick{RcInput::CENTER_JOYSTICK, config::STEERING_JOYSTICK_INPUT_PIN};  // The joystick for the steering
-RcInput homingModeSwitch{RcInput::SWITCH, config::TOP_LEFT_SWITCH_INPUT_PIN};             // The homing mode switch
-RcInput topLeftCenterSwitch{RcInput::SWITCH, config::TOP_LEFT_CENTER_SWITCH_INPUT_PIN};   // Unassigned switch
-RcInput towSwitch{RcInput::SWITCH, config::TOP_RIGHT_SWITCH_INPUT_PIN};                   // The tow switch
-RcInput forwardReverseSwitch{RcInput::SWITCH, config::TOP_RIGHT_CENTER_SWITCH_INPUT_PIN}; // The forward/reverse Switch
+RcInput gasJoystick{RcInput::CENTER_JOYSTICK, config::GAS_JOYSTICK_INPUT_PIN};           // The joystick for the gas/brake
+RcInput steeringJoystick{RcInput::CENTER_JOYSTICK, config::STEERING_JOYSTICK_INPUT_PIN}; // The joystick for the steering
+RcInput homingModeSwitch{RcInput::SWITCH, config::TOP_LEFT_SWITCH_INPUT_PIN};            // The homing mode switch
+RcInput topLeftCenterSwitch{RcInput::SWITCH, config::TOP_LEFT_CENTER_SWITCH_INPUT_PIN};  // Unassigned switch
+RcInput towSwitch{RcInput::SWITCH, config::TOP_RIGHT_SWITCH_INPUT_PIN};                  // The tow switch
+RcInput gearSwitch{RcInput::SWITCH, config::TOP_RIGHT_CENTER_SWITCH_INPUT_PIN};          // The forward/reverse Switch
 
 // Setup the stepper motors
 Stepper brakeStepper{AccelStepper::DRIVER, config::BRAKE_STEPPER_PULSE_PIN, config::BRAKE_STEPPER_DIR_PIN};          // The stepper motor for the brake
@@ -69,6 +69,10 @@ void setup()
   towSwitch.minInput = config::TOW_SWITCH_MIN_INPUT;
   towSwitch.maxInput = config::TOW_SWITCH_MAX_INPUT;
 
+  // Setup the gear switch
+  gearSwitch.minInput = config::GEAR_SWITCH_MIN_INPUT;
+  gearSwitch.maxInput = config::GEAR_SWITCH_MAX_INPUT;
+
   // Setup the brake stepper
   brakeStepper.stepsPerRevolution = config::BRAKE_STEPPER_STEPS_PER_REVOLUTION;
   brakeStepper.setMaxSpeed(config::BRAKE_STEPPER_MAX_SPEED);
@@ -89,7 +93,7 @@ void setup()
   attachInterrupt(digitalPinToInterrupt(gasJoystick.inputPin), gasJoystickPinStateChange, CHANGE);
   attachInterrupt(digitalPinToInterrupt(steeringJoystick.inputPin), steeringJoystickPinStateChange, CHANGE);
   attachInterrupt(digitalPinToInterrupt(homingModeSwitch.inputPin), topLeftSwitchPinStateChange, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(forwardReverseSwitch.inputPin), toprightSwitchPinStateChange, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(gearSwitch.inputPin), toprightSwitchPinStateChange, CHANGE);
   attachInterrupt(digitalPinToInterrupt(topLeftCenterSwitch.inputPin), topLeftCenterSwitchPinStateChange, CHANGE);
   attachInterrupt(digitalPinToInterrupt(towSwitch.inputPin), topRightCenterSwitchPinStateChange, CHANGE);
 }
@@ -130,11 +134,11 @@ void loop()
 
       // Get the input for the gas joystick and output it to the motor
       int gasInput{gasJoystick.getOutput()};
-      if (forwardReverseSwitch.getOutput() && gasInput < 0)
+      if (gearSwitch.getOutput() && gasInput < 0)
       {
         gasInput = 0;
       }
-      if (!forwardReverseSwitch.getOutput() && gasInput > 0)
+      if (!gearSwitch.getOutput() && gasInput > 0)
       {
         gasInput = 0;
       }
@@ -151,7 +155,7 @@ void loop()
       // End of gas input
 
       // Get the input for the brake joystick and output it to the motor
-      if (forwardReverseSwitch.getOutput())
+      if (gearSwitch.getOutput())
       {
         brakeStepper.moveToInRange(gasJoystick.getOutput());
       }
@@ -186,7 +190,7 @@ void topLeftSwitchPinStateChange()
 }
 void toprightSwitchPinStateChange()
 {
-  forwardReverseSwitch.pinStateChange();
+  gearSwitch.pinStateChange();
 }
 void topLeftCenterSwitchPinStateChange()
 {
@@ -216,7 +220,7 @@ void homingMode()
   switch (stepperHoming)
   {
   case BRAKE:
-    if (forwardReverseSwitch.getOutput())
+    if (gearSwitch.getOutput())
     {
       brakeStepper.setCurrentPosition(brakeStepper.currentPosition());
     }
@@ -225,7 +229,7 @@ void homingMode()
     break;
 
   case STEERING:
-    if (forwardReverseSwitch.getOutput())
+    if (gearSwitch.getOutput())
     {
       steeringStepper.setCurrentPosition(steeringStepper.currentPosition());
     }
