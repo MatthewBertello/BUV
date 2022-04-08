@@ -14,12 +14,12 @@ enum Steppers                    // A list of the steppers
 Steppers stepperHoming = BRAKE; // The stepper that is currently being homed
 
 // Setup the RC inputs
-RcInput gasJoystick{RcInput::CENTER_JOYSTICK, config::GAS_JOYSTICK_INPUT_PIN};           // The joystick for the gas/brake
-RcInput steeringJoystick{RcInput::CENTER_JOYSTICK, config::STEERING_JOYSTICK_INPUT_PIN}; // The joystick for the steering
-RcInput homingModeSwitch{RcInput::SWITCH, config::TOP_LEFT_SWITCH_INPUT_PIN};            // The homing mode switch
-RcInput topLeftCenterSwitch{RcInput::SWITCH, config::TOP_LEFT_CENTER_SWITCH_INPUT_PIN};  // Unassigned switch
-RcInput towSwitch{RcInput::SWITCH, config::TOP_RIGHT_CENTER_SWITCH_INPUT_PIN};           // The tow switch
-RcInput forwardReverseSwitch{RcInput::SWITCH, config::TOP_RIGHT_SWITCH_INPUT_PIN};       // The forward/reverse Switch
+RcInput gasJoystick{RcInput::CENTER_JOYSTICK, config::GAS_JOYSTICK_INPUT_PIN};            // The joystick for the gas/brake
+RcInput steeringJoystick{RcInput::CENTER_JOYSTICK, config::STEERING_JOYSTICK_INPUT_PIN};  // The joystick for the steering
+RcInput homingModeSwitch{RcInput::SWITCH, config::TOP_LEFT_SWITCH_INPUT_PIN};             // The homing mode switch
+RcInput topLeftCenterSwitch{RcInput::SWITCH, config::TOP_LEFT_CENTER_SWITCH_INPUT_PIN};   // Unassigned switch
+RcInput towSwitch{RcInput::SWITCH, config::TOP_RIGHT_SWITCH_INPUT_PIN};                   // The tow switch
+RcInput forwardReverseSwitch{RcInput::SWITCH, config::TOP_RIGHT_CENTER_SWITCH_INPUT_PIN}; // The forward/reverse Switch
 
 // Setup the stepper motors
 Stepper brakeStepper{AccelStepper::DRIVER, config::BRAKE_STEPPER_PULSE_PIN, config::BRAKE_STEPPER_DIR_PIN};          // The stepper motor for the brake
