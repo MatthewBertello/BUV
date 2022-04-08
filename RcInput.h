@@ -9,15 +9,16 @@ class RcInput
 public:
     enum InputType // The types of inputs
     {
-        JOYSTICK,        // a normal joystick
-        CENTER_JOYSTICK, // a joystick that is centered
-        SWITCH,          // a switch
-        DIAL             // a dial
+        JOYSTICK,              // a normal joystick
+        CENTER_JOYSTICK,       // a joystick that is centered
+        SWITCH,                // a switch
+        THREE_POSITION_SWITCH, // a switch that has three positions
+        DIAL                   // a dial
     };
     int inputPin;                                     // The pin the input is connected to
     int minInput{config::DEFAULT_RC_INPUT_MIN_INPUT}; // The minimum value the input can be
     int maxInput{config::DEFAULT_RC_INPUT_MAX_INPUT}; // The maximum value the input can be
-    int centerInput{(minInput + maxInput) / 2};       // The center input value for a centered joystick
+    int centerInput{(minInput + maxInput) / 2};       // The center input value for a centered joystick or a  three position switch
     int minOutput{0};                                 // The minimum output value
     int maxOutput{100};                               // The maximum output value
     int deadzone{config::DEFAULT_RC_INPUT_DEADZONE};  // The deadzone for the input
@@ -50,6 +51,11 @@ public:
             break;
         case SWITCH:
             this->minOutput = 0;
+            this->maxOutput = 1;
+            this->deadzone = 0;
+            break;
+        case THREE_POSITION_SWITCH:
+            this->minOutput = -1;
             this->maxOutput = 1;
             this->deadzone = 0;
             break;
@@ -86,6 +92,9 @@ public:
         {
         case SWITCH:
             return getSwitchOutput();
+            break;
+        case THREE_POSITION_SWITCH:
+            return getThreePositionSwitchOutput();
             break;
         case CENTER_JOYSTICK:
             return getCenterJoystickOutput();
@@ -172,6 +181,29 @@ private:
         else
         {
             return LOW;
+        }
+    }
+
+    /**
+     * Gets the output for a switch that has three positions.
+     *
+     * @return -1, 0 or 1
+     */
+    int getThreePositionSwitchOutput()
+    {
+        int highDivider{(maxInput - centerInput) / 2};
+        int lowDivider{(centerInput - minInput) / 2};
+        if (currentInput >= highDivider)
+        {
+            return 1;
+        }
+        else if (currentInput < highDivider && currentInput > lowDivider)
+        {
+            return 0;
+        }
+        else
+        {
+            return -1;
         }
     }
 };
