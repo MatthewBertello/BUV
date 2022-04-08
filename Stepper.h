@@ -31,7 +31,7 @@ public:
      */
     void runThreshold()
     {
-        if (abs(AccelStepper::distanceToGo()) > errorThreshold)
+        if (abs(AccelStepper::distanceToGo()) < errorThreshold)
         {
             AccelStepper::moveTo(AccelStepper::currentPosition());
         }
