@@ -2,6 +2,7 @@
 #define RcInput_h
 #include "math.h"
 #include "config.h"
+#include "mathFunctions.h"
 
 class RcInput
 {
@@ -115,7 +116,7 @@ private:
             currentInput = minInput;
         if (abs(currentInput) < deadzone)
             return 0;
-        return int(double(currentInput - minInput) / double(maxInput - minInput) * double(maxOutput - minOutput)) + minOutput;
+        return mathFunctions::map(currentInput, minInput, maxInput, minOutput, maxOutput);
     }
 
     /**
@@ -131,7 +132,7 @@ private:
             currentInput = minInput;
         if (abs(currentInput) < deadzone)
             return 0;
-        return int(double(currentInput - minInput) / double(maxInput - minInput) * double(maxOutput - minOutput)) + minOutput;
+        return mathFunctions::map(currentInput, minInput, maxInput, minOutput, maxOutput);
     }
 
     /**
@@ -149,11 +150,11 @@ private:
             return 0;
         if (currentInput < centerInput)
         {
-            return int(double(currentInput - centerInput) / double(maxInput - centerInput) * double(maxOutput - 0)) + 0;
+            return mathFunctions::map(currentInput, minInput, centerInput, minOutput, 0);
         }
         else
         {
-            return int(double(currentInput - centerInput) / double(centerInput - minInput) * double(0 - minOutput)) + minOutput;
+            return mathFunctions::map(currentInput, centerInput, maxInput, 0, maxOutput);
         }
     }
 
