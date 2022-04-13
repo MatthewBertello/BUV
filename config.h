@@ -43,8 +43,9 @@ namespace config
     inline constexpr int STEERING_STEPPER_ERROR_THRESHOLD{DEFAULT_STEPPER_ERROR_THRESHOLD};           // The steering stepper error threshold
 
     // BUV
-    inline constexpr int INPUT_REFRESH_RATE{5};       // How often to read the inputs in ms
-    inline constexpr bool DISABLE_HOMING_MODE{false}; // Disable the homing mode
+    inline constexpr int INPUT_REFRESH_RATE{5};                       // How often to read the inputs in ms
+    inline constexpr bool DISABLE_HOMING_MODE{false};                 // Disable the homing mode
+    inline constexpr int MINIMUM_OUTPUT_FOR_MAIN_MOTOR_THROTTLE{165}; // The minimum output to apply power to the main motor throttle
 
     // RCInput
     inline constexpr int DEFAULT_RC_INPUT_MIN_INPUT{1000}; // The default minimum input value

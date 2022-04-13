@@ -150,7 +150,7 @@ void loop()
       if (gasInput != 0)
       {
         digitalWrite(config::FOOT_SWITCH_OUTPUT_PIN, HIGH);
-        analogWrite(config::MAIN_MOTOR_OUPTUT_PIN, (int(255.0 / 100.0) * gasInput));
+        analogWrite(config::MAIN_MOTOR_OUPTUT_PIN, mathFunctions::map(abs(gasInput), 0, 100, config::MINIMUM_OUTPUT_FOR_MAIN_MOTOR_THROTTLE, 255));
       }
       else
       {
@@ -160,13 +160,17 @@ void loop()
       // End of gas input
 
       // Get the input for the brake joystick and output it to the motor
-      if (gearSwitch.getOutput())
+      if ((gearSwitch.getOutput() == 1 || gearSwitch.getOutput() == 0) && gasJoystick.getOutput() < 0)
+      {
+        brakeStepper.moveToInRange(-gasJoystick.getOutput());
+      }
+      else if (gearSwitch.getOutput() == -1 && gasJoystick.getOutput() > 0)
       {
         brakeStepper.moveToInRange(gasJoystick.getOutput());
       }
       else
       {
-        brakeStepper.moveToInRange(-gasJoystick.getOutput());
+        brakeStepper.moveToInRange(0);
       }
       // End of brake input
 
