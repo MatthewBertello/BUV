@@ -76,8 +76,9 @@ namespace config
     inline constexpr int TOW_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The tow switch maximum input value
 
     // gear switch constants
-    inline constexpr int GEAR_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The gear switch minimum input value
-    inline constexpr int GEAR_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The gear switch maximum input value
+    inline constexpr int GEAR_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT};                             // The gear switch minimum input value
+    inline constexpr int GEAR_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT};                             // The gear switch maximum input value
+    inline constexpr int GEAR_SWITCH_CENTER_VALUE{(GEAR_SWITCH_MAX_INPUT + GEAR_SWITCH_MIN_INPUT) / 2}; // The gear switch center value
 
 } // namespace config
 
