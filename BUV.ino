@@ -176,6 +176,21 @@ void loop()
 
       steeringStepper.moveToInRange(steeringJoystick.getOutput());                  // Set the target for the steering stepper
       digitalWrite(config::TOW_SWITCH_OUTPUT_PIN, topLeftCenterSwitch.getOutput()); // Set the tow switch output
+      if (gearSwitch.getOutput() == 0)
+      {
+        digitalWrite(config::FORWARD_SWITCH_OUTPUT_PIN, LOW);
+        digitalWrite(config::REVERSE_SWITCH_OUTPUT_PIN, LOW);
+      }
+      else if (gearSwitch.getOutput() == 1)
+      {
+        digitalWrite(config::FORWARD_SWITCH_OUTPUT_PIN, HIGH);
+        digitalWrite(config::REVERSE_SWITCH_OUTPUT_PIN, LOW);
+      }
+      else if (gearSwitch.getOutput() == -1)
+      {
+        digitalWrite(config::FORWARD_SWITCH_OUTPUT_PIN, HIGH);
+        digitalWrite(config::REVERSE_SWITCH_OUTPUT_PIN, LOW);
+      }
     }
 
     // Run the stepper motors

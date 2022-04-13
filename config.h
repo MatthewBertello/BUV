@@ -19,6 +19,8 @@ namespace config
     inline constexpr int MAIN_MOTOR_OUPTUT_PIN{11};         // The main motor output pin
     inline constexpr int FOOT_SWITCH_OUTPUT_PIN{9};         // The foot switch output pin
     inline constexpr int TOW_SWITCH_OUTPUT_PIN{10};         // The tow switch output pin
+    inline constexpr int FORWARD_SWITCH_OUTPUT_PIN{12};     // The forward switch output pin
+    inline constexpr int REVERSE_SWITCH_OUTPUT_PIN{13};     // The reverse switch output pin
 
     // Stepper
     inline constexpr int DEFAULT_STEPPER_STEPS_PER_REVOLUTION{400};                            // The default number of steps per revolution
