@@ -67,20 +67,24 @@ namespace config
     inline constexpr int STEERING_JOYSTICK_CENTER_VALUE{(STEERING_JOYSTICK_MAX_INPUT + STEERING_JOYSTICK_MIN_INPUT) / 2}; // The steering joystick center value
 
     // Homing mode switch constants
-    inline constexpr int HOMING_MODE_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The homing mode switch minimum input value
-    inline constexpr int HOMING_MODE_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The homing mode switch maximum input value
+    // The max and min input values are swapped because the input value is low when the switch is in the up position
+    inline constexpr int HOMING_MODE_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The homing mode switch minimum input value
+    inline constexpr int HOMING_MODE_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The homing mode switch maximum input value
 
     // Top left center switch constants
-    inline constexpr int TOP_LEFT_CENTER_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The top left center switch minimum input value
-    inline constexpr int TOP_LEFT_CENTER_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The top left center switch maximum input value
+    // The max and min input values are swapped because the input value is low when the switch is in the up position
+    inline constexpr int TOP_LEFT_CENTER_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The top left center switch minimum input value
+    inline constexpr int TOP_LEFT_CENTER_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The top left center switch maximum input value
 
     // Tow switch constants
-    inline constexpr int TOW_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The tow switch minimum input value
-    inline constexpr int TOW_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The tow switch maximum input value
+    // The max and min input values are swapped because the input value is low when the switch is in the up position
+    inline constexpr int TOW_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The tow switch minimum input value
+    inline constexpr int TOW_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The tow switch maximum input value
 
     // gear switch constants
-    inline constexpr int GEAR_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT};                             // The gear switch minimum input value
-    inline constexpr int GEAR_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT};                             // The gear switch maximum input value
+    // The max and min input values are swapped because the input value is low when the switch is in the up position
+    inline constexpr int GEAR_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MAX_INPUT};                             // The gear switch minimum input value
+    inline constexpr int GEAR_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MIN_INPUT};                             // The gear switch maximum input value
     inline constexpr int GEAR_SWITCH_CENTER_VALUE{(GEAR_SWITCH_MAX_INPUT + GEAR_SWITCH_MIN_INPUT) / 2}; // The gear switch center value
 
 } // namespace config
