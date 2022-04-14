@@ -78,8 +78,8 @@ void setup()
   brakeStepper.stepsPerRevolution = config::BRAKE_STEPPER_STEPS_PER_REVOLUTION;
   brakeStepper.setMaxSpeed(config::BRAKE_STEPPER_MAX_SPEED);
   brakeStepper.setAcceleration(config::BRAKE_STEPPER_ACCELERATION);
-  brakeStepper.rangeMinimum = -brakeStepper.stepsPerRevolution;
-  brakeStepper.rangeMaximum = brakeStepper.stepsPerRevolution;
+  brakeStepper.rangeMinimum = config::BRAKE_STEPPER_RANGE_MINIMUM;
+  brakeStepper.rangeMaximum = config::BRAKE_STEPPER_RANGE_MAXIMUM;
   brakeStepper.errorThreshold = config::BRAKE_STEPPER_ERROR_THRESHOLD;
 
   // Setup the steering stepper
