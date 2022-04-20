@@ -4,23 +4,23 @@
 namespace config
 {
     // Input pins
-    inline constexpr int GAS_JOYSTICK_INPUT_PIN{3};             // The pin the gas joystick is connected to - must be an interrupt pin
-    inline constexpr int STEERING_JOYSTICK_INPUT_PIN{2};        // The pin the steering joystick is connected to - must be an interrupt pin
-    inline constexpr int TOP_LEFT_SWITCH_INPUT_PIN{18};         // The pin the top left switch is connected to - must be an interrupt pin
+    inline constexpr int GAS_JOYSTICK_INPUT_PIN{2};             // The pin the gas joystick is connected to - must be an interrupt pin - RC CH2
+    inline constexpr int STEERING_JOYSTICK_INPUT_PIN{3};        // The pin the steering joystick is connected to - must be an interrupt pin - RC CH4
+    inline constexpr int TOP_LEFT_SWITCH_INPUT_PIN{18};         // The pin the top left switch is connected to - must be an interrupt pin -
     inline constexpr int TOP_RIGHT_SWITCH_INPUT_PIN{19};        // The pin the top right switch is connected to - must be an interrupt pin
     inline constexpr int TOP_LEFT_CENTER_SWITCH_INPUT_PIN{20};  // The pin the top left center switch is connected to - must be an interrupt pin
     inline constexpr int TOP_RIGHT_CENTER_SWITCH_INPUT_PIN{21}; // The pin the top right center switch is connected to - must be an interrupt pin
 
     // Output pins
-    inline constexpr uint8_t BRAKE_STEPPER_PULSE_PIN{4};    // The brake stepper pulse pin
-    inline constexpr uint8_t BRAKE_STEPPER_DIR_PIN{5};      // The brake stepper direction pin
-    inline constexpr uint8_t STEERING_STEPPER_PULSE_PIN{6}; // The steering stepper pulse pin
-    inline constexpr uint8_t STEERING_STEPPER_DIR_PIN{7};   // The steering stepper direction pin
-    inline constexpr int MAIN_MOTOR_OUPTUT_PIN{11};         // The main motor output pin
-    inline constexpr int FOOT_SWITCH_OUTPUT_PIN{9};         // The foot switch output pin
-    inline constexpr int TOW_SWITCH_OUTPUT_PIN{10};         // The tow switch output pin
-    inline constexpr int FORWARD_SWITCH_OUTPUT_PIN{12};     // The forward switch output pin
-    inline constexpr int REVERSE_SWITCH_OUTPUT_PIN{13};     // The reverse switch output pin
+    inline constexpr uint8_t BRAKE_STEPPER_PULSE_PIN{24};    // The brake stepper pulse pin
+    inline constexpr uint8_t BRAKE_STEPPER_DIR_PIN{25};      // The brake stepper direction pin
+    inline constexpr uint8_t STEERING_STEPPER_PULSE_PIN{22}; // The steering stepper pulse pin
+    inline constexpr uint8_t STEERING_STEPPER_DIR_PIN{23};   // The steering stepper direction pin
+    inline constexpr int MAIN_MOTOR_OUPTUT_PIN{11};          // The main motor output pin
+    inline constexpr int FOOT_SWITCH_OUTPUT_PIN{9};          // The foot switch output pin
+    inline constexpr int TOW_SWITCH_OUTPUT_PIN{10};          // The tow switch output pin
+    inline constexpr int FORWARD_SWITCH_OUTPUT_PIN{12};      // The forward switch output pin
+    inline constexpr int REVERSE_SWITCH_OUTPUT_PIN{13};      // The reverse switch output pin
 
     // Stepper
     inline constexpr int DEFAULT_STEPPER_STEPS_PER_REVOLUTION{400};                            // The default number of steps per revolution
