@@ -40,8 +40,8 @@ namespace config
     inline constexpr int STEERING_STEPPER_STEPS_PER_REVOLUTION{DEFAULT_STEPPER_STEPS_PER_REVOLUTION}; // The steering stepper number of steps per revolution
     inline constexpr int STEERING_STEPPER_MAX_SPEED{DEFAULT_STEPPER_MAX_SPEED};                       // The steering stepper maximum speed
     inline constexpr int STEERING_STEPPER_ACCELERATION{DEFAULT_STEPPER_ACCELERATION};                 // The steering stepper acceleration
-    inline constexpr int STEERING_STEPPER_RANGE_MINIMUM{-STEERING_STEPPER_STEPS_PER_REVOLUTION};      // The steering stepper minimum range
-    inline constexpr int STEERING_STEPPER_RANGE_MAXIMUM{STEERING_STEPPER_STEPS_PER_REVOLUTION};       // The steering stepper maximum range
+    inline constexpr int STEERING_STEPPER_RANGE_MINIMUM{-STEERING_STEPPER_STEPS_PER_REVOLUTION * 2};  // The steering stepper minimum range
+    inline constexpr int STEERING_STEPPER_RANGE_MAXIMUM{STEERING_STEPPER_STEPS_PER_REVOLUTION * 2};   // The steering stepper maximum range
     inline constexpr int STEERING_STEPPER_ERROR_THRESHOLD{DEFAULT_STEPPER_ERROR_THRESHOLD};           // The steering stepper error threshold
 
     // BUV
