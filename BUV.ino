@@ -25,22 +25,22 @@ RcInput gearSwitch{RcInput::THREE_POSITION_SWITCH, config::TOP_RIGHT_CENTER_SWIT
 Stepper brakeStepper{AccelStepper::DRIVER, config::BRAKE_STEPPER_PULSE_PIN, config::BRAKE_STEPPER_DIR_PIN};          // The stepper motor for the brake
 Stepper steeringStepper{AccelStepper::DRIVER, config::STEERING_STEPPER_PULSE_PIN, config::STEERING_STEPPER_DIR_PIN}; // The stepper motor for the steering wheel
 
-/**
- * !This code is for debugging purposes only
+
+// * !This code is for debugging purposes only
 unsigned long lastPrint;
-unsigned long printRate = 5000;
-*/
+unsigned long printRate = config::INPUT_REFRESH_RATE;
+
 
 /**
  * Runs once before the main loop
  */
 void setup()
 {
-  /**
-   * !This code is for debugging purposes only
+  
+   //* !This code is for debugging purposes only
   Serial.begin(9600); // Start the serial port
   Serial.println("Start");
-  */
+  
 
   // Setup the output pins
   pinMode(config::MAIN_MOTOR_OUPTUT_PIN, OUTPUT);
@@ -104,23 +104,28 @@ void setup()
  */
 void loop()
 {
-  /**
-   * !This code is for debugging purposes only
+  
+  // * !This code is for debugging purposes only
   // Print current values
   if(millis() - lastPrint > printRate)
   {
     lastPrint = millis();
-    Serial.print("gasJoystick input: ");
+    //Serial.print("gasJoystick input: ");
+    //Serial.println(gasJoystick.currentInput);
+    //Serial.print("gasJoystick output: ");
+    //Serial.println(gasJoystick.getOutput());
+    //Serial.print("steeringJoystick output: ");
+    //Serial.println(steeringJoystick.getOutput());
+    //Serial.print("gear");
+    //Serial.println(gearSwitch.getOutput());
+    //Serial.print("brakeStepper position: ");
+    //Serial.println(brakeStepper.currentPosition());
+    //Serial.print("brakeStepper target Position: ");
+    //Serial.println(brakeStepper.targetPosition());
     Serial.println(gasJoystick.currentInput);
-    Serial.print("gasJoystick output: ");
-    Serial.println(gasJoystick.getMappedOutput());
-    Serial.print("brakeStepper position: ");
-    Serial.println(brakeStepper.currentPosition());
-    Serial.print("brakeStepper target Position: ");
-    Serial.println(brakeStepper.targetPosition());
-    Serial.println();
+    //Serial.println();
   }
-  */
+  
 
   if (!homingModeSwitch.getOutput() && !config::DISABLE_HOMING_MODE) // If the top left switch is off run the homing function
   {

@@ -28,6 +28,27 @@ public:
 
     int currentInput; // The current input value
 
+    // create an int array of 10 values
+    int inputArray[10];
+
+    // create a function to sort inputArray
+    void sortInputArray()
+    {
+        // sort the array
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                if (inputArray[i] < inputArray[j])
+                {
+                    int temp = inputArray[i];
+                    inputArray[i] = inputArray[j];
+                    inputArray[j] = temp;
+                }
+            }
+        }
+    }
+
     /**
      * Constructor
      *
