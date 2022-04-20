@@ -6,10 +6,10 @@ namespace config
     // Input pins
     inline constexpr int GAS_JOYSTICK_INPUT_PIN{2};             // The pin the gas joystick is connected to - must be an interrupt pin - RC CH2
     inline constexpr int STEERING_JOYSTICK_INPUT_PIN{3};        // The pin the steering joystick is connected to - must be an interrupt pin - RC CH4
-    inline constexpr int TOP_LEFT_SWITCH_INPUT_PIN{18};         // The pin the top left switch is connected to - must be an interrupt pin -
-    inline constexpr int TOP_RIGHT_SWITCH_INPUT_PIN{19};        // The pin the top right switch is connected to - must be an interrupt pin
-    inline constexpr int TOP_LEFT_CENTER_SWITCH_INPUT_PIN{20};  // The pin the top left center switch is connected to - must be an interrupt pin
-    inline constexpr int TOP_RIGHT_CENTER_SWITCH_INPUT_PIN{21}; // The pin the top right center switch is connected to - must be an interrupt pin
+    inline constexpr int TOP_LEFT_SWITCH_INPUT_PIN{18};         // The pin the top left switch is connected to - must be an interrupt pin - RC CH7
+    inline constexpr int TOP_RIGHT_SWITCH_INPUT_PIN{19};        // The pin the top right switch is connected to - must be an interrupt pin - RC CH8
+    inline constexpr int TOP_LEFT_CENTER_SWITCH_INPUT_PIN{20};  // The pin the top left center switch is connected to - must be an interrupt pin - RC CH9
+    inline constexpr int TOP_RIGHT_CENTER_SWITCH_INPUT_PIN{21}; // The pin the top right center switch is connected to - must be an interrupt pin - RC CH10
 
     // Output pins
     inline constexpr uint8_t BRAKE_STEPPER_PULSE_PIN{24};    // The brake stepper pulse pin
