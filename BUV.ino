@@ -86,8 +86,8 @@ void setup()
   steeringStepper.stepsPerRevolution = config::STEERING_STEPPER_STEPS_PER_REVOLUTION;
   steeringStepper.setMaxSpeed(config::STEERING_STEPPER_MAX_SPEED);
   steeringStepper.setAcceleration(config::STEERING_STEPPER_ACCELERATION);
-  steeringStepper.rangeMinimum = -steeringStepper.stepsPerRevolution;
-  steeringStepper.rangeMaximum = steeringStepper.stepsPerRevolution;
+  steeringStepper.rangeMinimum = config::STEERING_STEPPER_RANGE_MINIMUM;
+  steeringStepper.rangeMaximum = config::STEERING_STEPPER_RANGE_MAXIMUM;
   steeringStepper.errorThreshold = config::STEERING_STEPPER_ERROR_THRESHOLD;
 
   // Add the interrups for the RC inputs
