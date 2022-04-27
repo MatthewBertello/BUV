@@ -23,6 +23,7 @@ public:
     int maxOutput{100};                               // The maximum output value
     int deadzone{config::DEFAULT_RC_INPUT_DEADZONE};  // The deadzone for the input
     InputType inputType;                              // The type of input
+    bool collectInput = false;
 
     volatile unsigned long input; // Used by the interrupt to captture when the input pin changes states. This is volatile because it is accessed by the interrupt.
 
@@ -92,13 +93,19 @@ public:
      */
     void pinStateChange()
     {
+        volatile unsigned long i = 0;
         if (digitalRead(this->inputPin) == HIGH)
         {
+            collectInput = true;
             this->input = micros();
         }
-        if (digitalRead(this->inputPin) == LOW)
+        if (digitalRead(this->inputPin) == LOW && collectInput)
         {
-            this->currentInput = micros() - this->input;
+            i = micros() - this->input;
+            if (i > 950 && i < 2050)
+            {
+                this->currentInput = i;
+            }
         }
     }
 

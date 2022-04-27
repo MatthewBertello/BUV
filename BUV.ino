@@ -11,7 +11,7 @@ enum Steppers                    // A list of the steppers
   BRAKE,
   STEERING,
 };
-
+/**
 enum interrupts
 {
   gasJoystickInterrupt,
@@ -21,8 +21,15 @@ enum interrupts
   towSwitchInterrupt,
   gearSwitchInterrupt
 };
+**/
+const int gasJoystickInterrupt = 0;
+const int  steeringJoystickInterrupt = 1;
+  const int homingModeSwitchInterrupt = 2;
+  const int topLeftCenterSwitchInterrupt = 3;
+  const int towSwitchInterrupt = 4;
+  const int gearSwitchInterrupt = 5;
 
-int currentInterrupt = interrupts::gasJoystickInterrupt;
+int currentInterrupt = gasJoystickInterrupt;
 
 Steppers stepperHoming = BRAKE; // The stepper that is currently being homed
 
@@ -49,11 +56,10 @@ unsigned long printRate = 5000;
  */
 void setup()
 {
-  /**
-   * !This code is for debugging purposes only
+
+  // * !This code is for debugging purposes only
   Serial.begin(9600); // Start the serial port
   Serial.println("Start");
-  */
 
   // Setup the output pins
   pinMode(config::MAIN_MOTOR_OUPTUT_PIN, OUTPUT);
@@ -104,12 +110,14 @@ void setup()
   steeringStepper.errorThreshold = config::STEERING_STEPPER_ERROR_THRESHOLD;
 
   // Add the interrups for the RC inputs
+  /**
   attachInterrupt(digitalPinToInterrupt(gasJoystick.inputPin), gasJoystickPinStateChange, CHANGE);
   attachInterrupt(digitalPinToInterrupt(steeringJoystick.inputPin), steeringJoystickPinStateChange, CHANGE);
   attachInterrupt(digitalPinToInterrupt(homingModeSwitch.inputPin), homingModeSwitchPinStateChange, CHANGE);
   attachInterrupt(digitalPinToInterrupt(gearSwitch.inputPin), gearSwitchPinStateChange, CHANGE);
   attachInterrupt(digitalPinToInterrupt(topLeftCenterSwitch.inputPin), topLeftCenterSwitchPinStateChange, CHANGE);
   attachInterrupt(digitalPinToInterrupt(towSwitch.inputPin), towSwitchPinStateChange, CHANGE);
+  **/
 }
 
 /**
@@ -137,40 +145,45 @@ void loop()
   // if it has been long enough since the last input check get the new inputs
   if (millis() - lastInputCheck >= config::INPUT_REFRESH_RATE)
   {
-
+    //Serial.println(gasJoystick.currentInput);
     lastInputCheck = millis(); // Update the last input check time
 
+    /**
     currentInterrupt++;
-    if (currentInterrupt > interrupts::gearSwitchInterrupt)
+    if (currentInterrupt > steeringJoystickInterrupt)
     {
-      currentInterrupt = interrupts::gasJoystickInterrupt;
+      currentInterrupt = gasJoystickInterrupt;
     }
+    
+    //currentInterrupt = interrupts::gasJoystickInterrupt;
     detachInterrupts();
     switch (currentInterrupt)
     {
-    case interrupts::gasJoystickInterrupt:
+    case gasJoystickInterrupt:
       attachInterrupt(digitalPinToInterrupt(gasJoystick.inputPin), gasJoystickPinStateChange, CHANGE);
       break;
-    case interrupts::steeringJoystickInterrupt:
+    case steeringJoystickInterrupt:
       attachInterrupt(digitalPinToInterrupt(steeringJoystick.inputPin), steeringJoystickPinStateChange, CHANGE);
       break;
-    case interrupts::homingModeSwitchInterrupt:
+    case homingModeSwitchInterrupt:
       attachInterrupt(digitalPinToInterrupt(gearSwitch.inputPin), homingModeSwitchPinStateChange, CHANGE);
       break;
-    case interrupts::topLeftCenterSwitchInterrupt:
+    case topLeftCenterSwitchInterrupt:
       attachInterrupt(digitalPinToInterrupt(topLeftCenterSwitch.inputPin), topLeftCenterSwitchPinStateChange, CHANGE);
       break;
-    case interrupts::towSwitchInterrupt:
+    case towSwitchInterrupt:
       attachInterrupt(digitalPinToInterrupt(towSwitch.inputPin), towSwitchPinStateChange, CHANGE);
       break;
-    case interrupts::gearSwitchInterrupt:
+    case gearSwitchInterrupt:
       attachInterrupt(digitalPinToInterrupt(gearSwitch.inputPin), gearSwitchPinStateChange, CHANGE);
       break;
     default:
       detachInterrupts();
-      currentInterrupt = interrupts::gasJoystickInterrupt;
+      currentInterrupt = gasJoystickInterrupt;
       break;
     }
+    Serial.println(currentInterrupt);
+    **/
 
     if (!homingModeSwitch.getOutput() && !config::DISABLE_HOMING_MODE) // If the top left switch is off run the homing function
     {
@@ -208,14 +221,17 @@ void loop()
       if ((gearSwitch.getOutput() == 1 || gearSwitch.getOutput() == 0) && gasJoystick.getOutput() < 0)
       {
         brakeStepper.moveToInRange(-gasJoystick.getOutput());
+        //Serial.println(-gasJoystick.getOutput());
       }
       else if (gearSwitch.getOutput() == -1 && gasJoystick.getOutput() > 0)
       {
+        //Serial.println(gasJoystick.getOutput());
         brakeStepper.moveToInRange(gasJoystick.getOutput());
       }
       else
       {
         brakeStepper.moveToInRange(0);
+        //Serial.println(0);
       }
       // End of brake input
 
@@ -239,9 +255,9 @@ void loop()
     }
 
     // Run the stepper motors
-    brakeStepper.runThreshold();
-    steeringStepper.runThreshold();
   }
+  brakeStepper.runThreshold();
+    steeringStepper.runThreshold();
 } // End of main loop
 
 void detachInterrupts()
@@ -252,6 +268,12 @@ void detachInterrupts()
   detachInterrupt(digitalPinToInterrupt(gearSwitch.inputPin));
   detachInterrupt(digitalPinToInterrupt(topLeftCenterSwitch.inputPin));
   detachInterrupt(digitalPinToInterrupt(towSwitch.inputPin));
+  gasJoystick.collectInput = false;
+  steeringJoystick.collectInput = false;
+  homingModeSwitch.collectInput = false;
+  gearSwitch.collectInput = false;
+  topLeftCenterSwitch.collectInput = false;
+  towSwitch.collectInput = false;
 }
 
 // Create the interrupt functions for the RC inputs
