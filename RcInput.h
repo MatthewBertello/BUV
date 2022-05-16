@@ -3,6 +3,7 @@
 #include "math.h"
 #include "config.h"
 #include "mathFunctions.h"
+#include <PPMReader.h>
 
 class RcInput
 {
@@ -15,30 +16,30 @@ public:
         THREE_POSITION_SWITCH, // a switch that has three positions
         DIAL                   // a dial
     };
-    int inputPin;                                     // The pin the input is connected to
+    int inputChannel;                                 // The channel of the input
     int minInput{config::DEFAULT_RC_INPUT_MIN_INPUT}; // The minimum value the input can be
     int maxInput{config::DEFAULT_RC_INPUT_MAX_INPUT}; // The maximum value the input can be
     int centerInput{(minInput + maxInput) / 2};       // The center input value for a centered joystick or a  three position switch
     int minOutput{0};                                 // The minimum output value
     int maxOutput{100};                               // The maximum output value
     int deadzone{config::DEFAULT_RC_INPUT_DEADZONE};  // The deadzone for the input
+    PPMReader *ppm;                                   // The PPM reader
     InputType inputType;                              // The type of input
 
     volatile unsigned long input; // Used by the interrupt to captture when the input pin changes states. This is volatile because it is accessed by the interrupt.
-
-    int currentInput; // The current input value
 
     /**
      * Constructor
      *
      * @param inputType The type of input
-     * @param inputPin The pin the joystick is connected to
+     * @param inputChannel The pin the joystick is connected to
+     * @param ppm The PPM reader
      */
-    RcInput(InputType inputType, int inputPin)
+    RcInput(InputType inputType, int inputChannel, PPMReader *ppm)
     {
+        this->ppm = ppm;
         this->inputType = inputType;
-        this->inputPin = inputPin;
-        pinMode(inputPin, INPUT);
+        this->inputChannel = inputChannel;
         switch (inputType)
         {
         case JOYSTICK:
@@ -67,18 +68,13 @@ public:
     }
 
     /**
-     * Checks the state of the input pin. If the pin is high the time is recorded. If the pin is low the time difference is calculated and the current input is set to the difference.
+     * Gets the current input
+     *
+     * @return The current input
      */
-    void pinStateChange()
+    int getCurrentInput()
     {
-        if (digitalRead(this->inputPin) == HIGH)
-        {
-            this->input = micros();
-        }
-        if (digitalRead(this->inputPin) == LOW)
-        {
-            this->currentInput = micros() - this->input;
-        }
+        ppm->latestValidChannelValue(inputChannel, 0);
     }
 
     /**
@@ -119,13 +115,14 @@ private:
      */
     int getJoystickOutput()
     {
-        if (currentInput > maxInput)
-            currentInput = maxInput;
-        if (currentInput < minInput)
-            currentInput = minInput;
-        if (abs(currentInput) < deadzone)
+        int output = getCurrentInput();
+        if (output > maxInput)
+            output = maxInput;
+        if (output < minInput)
+            output = minInput;
+        if (abs(output) < deadzone)
             return 0;
-        return mathFunctions::map(currentInput, minInput, maxInput, minOutput, maxOutput);
+        return mathFunctions::map(output, minInput, maxInput, minOutput, maxOutput);
     }
 
     /**
@@ -135,13 +132,14 @@ private:
      */
     int getDialOutput()
     {
-        if (currentInput > maxInput)
-            currentInput = maxInput;
-        if (currentInput < minInput)
-            currentInput = minInput;
-        if (abs(currentInput) < deadzone)
+        int output = getCurrentInput();
+        if (output > maxInput)
+            output = maxInput;
+        if (output < minInput)
+            output = minInput;
+        if (abs(output) < deadzone)
             return 0;
-        return mathFunctions::map(currentInput, minInput, maxInput, minOutput, maxOutput);
+        return mathFunctions::map(output, minInput, maxInput, minOutput, maxOutput);
     }
 
     /**
@@ -151,19 +149,20 @@ private:
      */
     int getCenterJoystickOutput()
     {
-        if (currentInput > maxInput)
-            currentInput = maxInput;
-        if (currentInput < minInput)
-            currentInput = minInput;
-        if (abs(currentInput - centerInput) < deadzone)
+        int output = getCurrentInput();
+        if (output > maxInput)
+            output = maxInput;
+        if (output < minInput)
+            output = minInput;
+        if (abs(getCurrentInput() - centerInput) < deadzone)
             return 0;
-        if (currentInput < centerInput)
+        if (output < centerInput)
         {
-            return mathFunctions::map(currentInput, minInput, centerInput, minOutput, 0);
+            return mathFunctions::map(output, minInput, centerInput, minOutput, 0);
         }
         else
         {
-            return mathFunctions::map(currentInput, centerInput, maxInput, 0, maxOutput);
+            return mathFunctions::map(getCurrentInput(), centerInput, maxInput, 0, maxOutput);
         }
     }
 
@@ -174,7 +173,7 @@ private:
      */
     int getSwitchOutput()
     {
-        if (currentInput > (maxInput + minInput) / 2)
+        if (getCurrentInput() > (maxInput + minInput) / 2)
         {
             return HIGH;
         }
@@ -193,11 +192,11 @@ private:
     {
         int highDivider{(maxInput - centerInput) / 2};
         int lowDivider{(centerInput - minInput) / 2};
-        if (currentInput >= highDivider)
+        if (getCurrentInput() >= highDivider)
         {
             return 1;
         }
-        else if (currentInput < highDivider && currentInput > lowDivider)
+        else if (getCurrentInput() < highDivider && getCurrentInput() > lowDivider)
         {
             return 0;
         }
