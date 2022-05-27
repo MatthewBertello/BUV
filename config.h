@@ -16,17 +16,16 @@ namespace config
     inline constexpr int PPM_INTERRUPT_PIN{2}; // The pin the PPM interrupt is connected to - must be an interrupt pin
 
     // Input Channels
-    inline constexpr int RIGHT_STICK_LEFT_RIGHT{1};           // The channel the right stick's left/right is connected to - RC CH1
-    inline constexpr int RIGHT_STICK_UP_DOWN{2};             // The channel the right stick's up/down is connected to - RC CH2
-    inline constexpr int LEFT_STICK_UP_DOWN{3};              // The channel the left stick's up/down is connected to - RC CH3
-    inline constexpr int LEFT_STICK_LEFT_RIGHT{4};           // The channel the left stick's left/right is connected to - RC CH4
-    inline constexpr int LEFT_DIAL{5};                       // The channel the left dial is connected to - RC CH5
-    inline constexpr int RIGHT_DIAL{6};                      // The channel the right dial is connected to - RC CH6
-    inline constexpr int TOP_LEFT_SWITCH{7};                 // The channel the top left switch is connected to - RC CH7
-    inline constexpr int TOP_LEFT_CENTER_SWITCH{8};          // The channel the top left center switch is connected to - RC CH8
-    inline constexpr int TOP_RIGHT_CENTER_SWITCH{9};         // The channel the top right center switch is connected to - RC CH9
-    inline constexpr int TOP_RIGHT_SWITCH{10};                // The channel the top right switch is connected to - RC CH10
-
+    inline constexpr int RIGHT_STICK_LEFT_RIGHT{1};  // The channel the right stick's left/right is connected to - RC CH1
+    inline constexpr int RIGHT_STICK_UP_DOWN{2};     // The channel the right stick's up/down is connected to - RC CH2
+    inline constexpr int LEFT_STICK_UP_DOWN{3};      // The channel the left stick's up/down is connected to - RC CH3
+    inline constexpr int LEFT_STICK_LEFT_RIGHT{4};   // The channel the left stick's left/right is connected to - RC CH4
+    inline constexpr int TOP_LEFT_SWITCH{5};         // The channel the top left switch is connected to - RC CH5
+    inline constexpr int TOP_LEFT_CENTER_SWITCH{6};  // The channel the top left center switch is connected to - RC CH6
+    inline constexpr int TOP_RIGHT_CENTER_SWITCH{7}; // The channel the top right center switch is connected to - RC CH7
+    inline constexpr int TOP_RIGHT_SWITCH{8};        // The channel the top right switch is connected to - RC CH8
+    inline constexpr int LEFT_DIAL{9};               // The channel the left dial is connected to - RC CH9
+    inline constexpr int RIGHT_DIAL{10};             // The channel the right dial is connected to - RC CH10
 
     /**
      * ! These can be removed if the PPM interrupt works

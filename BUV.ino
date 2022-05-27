@@ -18,10 +18,10 @@ PPMReader ppm(config::PPM_INTERRUPT_PIN, 10); // The PPM reader
 Steppers stepperHoming = BRAKE;               // The stepper that is currently being homed
 
 // Setup the RC inputs
-RcInput gasJoystick{RcInput::CENTER_JOYSTICK, config::LEFT_STICK_UP_DOWN, &ppm};           // The joystick for the gas/brake
-RcInput steeringJoystick{RcInput::CENTER_JOYSTICK, config::RIGHT_STICK_LEFT_RIGHT, &ppm};  // The joystick for the steering
+RcInput gasJoystick{RcInput::CENTER_JOYSTICK, config::RIGHT_STICK_UP_DOWN, &ppm};          // The joystick for the gas/brake
+RcInput steeringJoystick{RcInput::CENTER_JOYSTICK, config::LEFT_STICK_LEFT_RIGHT, &ppm};   // The joystick for the steering
 RcInput homingModeSwitch{RcInput::SWITCH, config::TOP_LEFT_SWITCH, &ppm};                  // The homing mode switch
-RcInput topLeftCenterSwitch{RcInput::SWITCH, config::TOP_LEFT_CENTER_SWITCH, &ppm};        // Unassigned switch
+RcInput setHomeSwitch{RcInput::SWITCH, config::TOP_LEFT_CENTER_SWITCH, &ppm};              // The set home switch
 RcInput towSwitch{RcInput::SWITCH, config::TOP_RIGHT_SWITCH, &ppm};                        // The tow switch
 RcInput gearSwitch{RcInput::THREE_POSITION_SWITCH, config::TOP_RIGHT_CENTER_SWITCH, &ppm}; // The forward/reverse Switch
 
@@ -29,22 +29,19 @@ RcInput gearSwitch{RcInput::THREE_POSITION_SWITCH, config::TOP_RIGHT_CENTER_SWIT
 Stepper brakeStepper{AccelStepper::DRIVER, config::BRAKE_STEPPER_PULSE_PIN, config::BRAKE_STEPPER_DIR_PIN};          // The stepper motor for the brake
 Stepper steeringStepper{AccelStepper::DRIVER, config::STEERING_STEPPER_PULSE_PIN, config::STEERING_STEPPER_DIR_PIN}; // The stepper motor for the steering wheel
 
-
- //* !This code is for debugging purposes only
+//* !This code is for debugging purposes only
 unsigned long lastPrint;
 unsigned long printRate = 500;
-
 
 /**
  * Runs once before the main loop
  */
 void setup()
 {
-  
-   //* !This code is for debugging purposes only
+
+  //* !This code is for debugging purposes only
   Serial.begin(9600); // Start the serial port
   Serial.println("Start");
-  
 
   // Setup the output pins
   pinMode(config::MAIN_MOTOR_OUPTUT_PIN, OUTPUT);
@@ -100,32 +97,31 @@ void setup()
  */
 void loop()
 {
-  
-   //* !This code is for debugging purposes only
+
+  //* !This code is for debugging purposes only
   // Print current values
-  
-  if(millis() - lastPrint > printRate)
+
+  if (millis() - lastPrint > printRate)
   {
     lastPrint = millis();
-    //Serial.println("Hello");
-    for(int i = 1; i <= 10; i++)
+    // Serial.println("Hello");
+    for (int i = 1; i <= 10; i++)
     {
       int x = ppm.latestValidChannelValue(i, 0);
       Serial.print(i);
       Serial.print(" = ");
       Serial.println(x);
     }
-    //Serial.print("gasJoystick input: ");
-    //Serial.println(gasJoystick.getCurrentInput());
-    //Serial.print("gasJoystick output: ");
-    //Serial.println(gasJoystick.getOutput());
-    //Serial.print("brakeStepper position: ");
-    //Serial.println(brakeStepper.currentPosition());
-    //Serial.print("brakeStepper target Position: ");
-    //Serial.println(brakeStepper.targetPosition());
+    // Serial.print("gasJoystick input: ");
+    // Serial.println(gasJoystick.getCurrentInput());
+    // Serial.print("gasJoystick output: ");
+    // Serial.println(gasJoystick.getOutput());
+    // Serial.print("brakeStepper position: ");
+    // Serial.println(brakeStepper.currentPosition());
+    // Serial.print("brakeStepper target Position: ");
+    // Serial.println(brakeStepper.targetPosition());
     Serial.println();
   }
-  
 
   if (!homingModeSwitch.getOutput() && !config::DISABLE_HOMING_MODE) // If the top left switch is off run the homing function
   {
@@ -179,8 +175,10 @@ void loop()
       }
       // End of brake input
 
-      steeringStepper.moveToInRange(steeringJoystick.getOutput());                  // Set the target for the steering stepper
-      digitalWrite(config::TOW_SWITCH_OUTPUT_PIN, topLeftCenterSwitch.getOutput()); // Set the tow switch output
+      steeringStepper.moveToInRange(steeringJoystick.getOutput());        // Set the target for the steering stepper
+      digitalWrite(config::TOW_SWITCH_OUTPUT_PIN, towSwitch.getOutput()); // Set the tow switch output
+
+      // set the gear switch output
       if (gearSwitch.getOutput() == 0)
       {
         digitalWrite(config::FORWARD_SWITCH_OUTPUT_PIN, LOW);
@@ -223,7 +221,7 @@ void homingMode()
   switch (stepperHoming)
   {
   case BRAKE:
-    if (gearSwitch.getOutput())
+    if (setHomeSwitch.getOutput())
     {
       brakeStepper.setCurrentPosition(brakeStepper.currentPosition());
     }
@@ -232,7 +230,7 @@ void homingMode()
     break;
 
   case STEERING:
-    if (gearSwitch.getOutput())
+    if (setHomeSwitch.getOutput())
     {
       steeringStepper.setCurrentPosition(steeringStepper.currentPosition());
     }
