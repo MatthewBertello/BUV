@@ -66,6 +66,10 @@ void setup()
   homingModeSwitch.minInput = config::HOMING_MODE_SWITCH_MIN_INPUT;
   homingModeSwitch.maxInput = config::HOMING_MODE_SWITCH_MAX_INPUT;
 
+  // Setup the set home switch
+  setHomeSwitch.minInput = config::SET_HOME_SWITCH_MIN_INPUT;
+  setHomeSwitch.maxInput = config::SET_HOME_SWITCH_MAX_INPUT;
+
   // Setup the tow switch
   towSwitch.minInput = config::TOW_SWITCH_MIN_INPUT;
   towSwitch.maxInput = config::TOW_SWITCH_MAX_INPUT;
@@ -97,30 +101,31 @@ void setup()
  */
 void loop()
 {
-
-  //* !This code is for debugging purposes only
+  // !This code is for debugging purposes only
   // Print current values
-
   if (millis() - lastPrint > printRate)
   {
     lastPrint = millis();
-    // Serial.println("Hello");
     for (int i = 1; i <= 10; i++)
     {
       int x = ppm.latestValidChannelValue(i, 0);
-      Serial.print(i);
-      Serial.print(" = ");
-      Serial.println(x);
+      // Serial.print(i);
+      Serial.print(x);
+      Serial.print(" ");
     }
+    Serial.println();
     // Serial.print("gasJoystick input: ");
-    // Serial.println(gasJoystick.getCurrentInput());
+    // Serial.print(gasJoystick.getCurrentInput());
+    // Serial.print(" ");
     // Serial.print("gasJoystick output: ");
     // Serial.println(gasJoystick.getOutput());
+    // Serial.print(" ");
     // Serial.print("brakeStepper position: ");
     // Serial.println(brakeStepper.currentPosition());
+    // Serial.print(" ");
     // Serial.print("brakeStepper target Position: ");
     // Serial.println(brakeStepper.targetPosition());
-    Serial.println();
+    // Serial.println();
   }
 
   if (!homingModeSwitch.getOutput() && !config::DISABLE_HOMING_MODE) // If the top left switch is off run the homing function
