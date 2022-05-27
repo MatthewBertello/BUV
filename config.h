@@ -4,15 +4,6 @@
 namespace config
 {
     // Input pins
-    /**
-     * ! These can be removed if the PPM interrupt works
-    inline constexpr int GAS_JOYSTICK_INPUT_PIN{2};             // The pin the gas joystick is connected to - must be an interrupt pin - RC CH2
-    inline constexpr int STEERING_JOYSTICK_INPUT_PIN{3};        // The pin the steering joystick is connected to - must be an interrupt pin - RC CH4
-    inline constexpr int TOP_LEFT_SWITCH_INPUT_PIN{18};         // The pin the top left switch is connected to - must be an interrupt pin - RC CH7
-    inline constexpr int TOP_RIGHT_SWITCH_INPUT_PIN{19};        // The pin the top right switch is connected to - must be an interrupt pin - RC CH8
-    inline constexpr int TOP_LEFT_CENTER_SWITCH_INPUT_PIN{20};  // The pin the top left center switch is connected to - must be an interrupt pin - RC CH9
-    inline constexpr int TOP_RIGHT_CENTER_SWITCH_INPUT_PIN{21}; // The pin the top right center switch is connected to - must be an interrupt pin - RC CH10
-    */
     inline constexpr int PPM_INTERRUPT_PIN{2}; // The pin the PPM interrupt is connected to - must be an interrupt pin
 
     // Input Channels
@@ -26,18 +17,6 @@ namespace config
     inline constexpr int TOP_RIGHT_SWITCH{8};        // The channel the top right switch is connected to - RC CH8
     inline constexpr int LEFT_DIAL{9};               // The channel the left dial is connected to - RC CH9
     inline constexpr int RIGHT_DIAL{10};             // The channel the right dial is connected to - RC CH10
-
-    /**
-     * ! These can be removed if the PPM interrupt works
-    inline constexpr int GAS_JOYSTICK_CHANNEL{1};             // The channel the gas joystick is connected to - RC CH1
-    inline constexpr int GAS_JOYSTICK_CHANNEL{2};             // The channel the gas joystick is connected to - RC CH2
-    inline constexpr int STEERING_JOYSTICK_CHANNEL{3};        // The channel the steering joystick is connected to - RC CH3
-    inline constexpr int STEERING_JOYSTICK_CHANNEL{4};        // The channel the steering joystick is connected to - RC CH4
-    inline constexpr int TOP_LEFT_SWITCH_CHANNEL{7};          // The channel the top left switch is connected to - RC CH7
-    inline constexpr int TOP_RIGHT_SWITCH_CHANNEL{8};         // The channel the top right switch is connected to - RC CH8
-    inline constexpr int TOP_LEFT_CENTER_SWITCH_CHANNEL{9};   // The channel the top left center switch is connected to - RC CH9
-    inline constexpr int TOP_RIGHT_CENTER_SWITCH_CHANNEL{10}; // The channel the top right center switch is connected to - RC CH10
-    */
 
     // Output pins
     inline constexpr uint8_t BRAKE_STEPPER_PULSE_PIN{24};    // The brake stepper pulse pin
@@ -68,8 +47,8 @@ namespace config
     inline constexpr int STEERING_STEPPER_STEPS_PER_REVOLUTION{DEFAULT_STEPPER_STEPS_PER_REVOLUTION}; // The steering stepper number of steps per revolution
     inline constexpr int STEERING_STEPPER_MAX_SPEED{DEFAULT_STEPPER_MAX_SPEED};                       // The steering stepper maximum speed
     inline constexpr int STEERING_STEPPER_ACCELERATION{DEFAULT_STEPPER_ACCELERATION};                 // The steering stepper acceleration
-    inline constexpr int STEERING_STEPPER_RANGE_MINIMUM{-STEERING_STEPPER_STEPS_PER_REVOLUTION * 2};  // The steering stepper minimum range
-    inline constexpr int STEERING_STEPPER_RANGE_MAXIMUM{STEERING_STEPPER_STEPS_PER_REVOLUTION * 2};   // The steering stepper maximum range
+    inline constexpr int STEERING_STEPPER_RANGE_MINIMUM{-STEERING_STEPPER_STEPS_PER_REVOLUTION * 3};  // The steering stepper minimum range
+    inline constexpr int STEERING_STEPPER_RANGE_MAXIMUM{STEERING_STEPPER_STEPS_PER_REVOLUTION * 3};   // The steering stepper maximum range
     inline constexpr int STEERING_STEPPER_ERROR_THRESHOLD{DEFAULT_STEPPER_ERROR_THRESHOLD};           // The steering stepper error threshold
 
     // BUV
@@ -99,10 +78,10 @@ namespace config
     inline constexpr int HOMING_MODE_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The homing mode switch minimum input value
     inline constexpr int HOMING_MODE_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The homing mode switch maximum input value
 
-    // Top left center switch constants
+    // Set home switch constants
     // The max and min input values are swapped because the input value is low when the switch is in the up position
-    inline constexpr int TOP_LEFT_CENTER_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The top left center switch minimum input value
-    inline constexpr int TOP_LEFT_CENTER_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The top left center switch maximum input value
+    inline constexpr int SET_HOME_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The set home switch minimum input value
+    inline constexpr int SET_HOME_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The set home switch maximum input value
 
     // Tow switch constants
     // The max and min input values are swapped because the input value is low when the switch is in the up position
