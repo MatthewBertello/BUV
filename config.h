@@ -4,7 +4,13 @@
 namespace config
 {
     // Input pins
-    inline constexpr int PPM_INTERRUPT_PIN{2}; // The pin the PPM interrupt is connected to - must be an interrupt pin
+    inline constexpr int PPM_INTERRUPT_PIN{2};            // The pin the PPM interrupt is connected to - must be an interrupt pin
+    inline constexpr int FORWARD_SWITCH_PIN{34};          // The pin the forward switch is connected to
+    inline constexpr int REVERSE_SWITCH_PIN{36};          // The pin the reverse switch is connected to
+    inline constexpr int FOOT_SWITCH_PIN{38};             // The pin the tow switch is connected to
+    inline constexpr int THROTTLE_HIHG_REFERENCE_PIN{40}; // The pin the throttle high reference is connected to
+    inline constexpr int THROTTLE_WIPER_PIN{42};          // The pin the throttle wiper is connected to
+    inline constexpr int THROTTLE_LOW_REFERENCE_PIN{44};  // The pin the throttle low reference is connected to
 
     // Input Channels
     inline constexpr int RIGHT_STICK_LEFT_RIGHT{1};  // The channel the right stick's left/right is connected to - RC CH1
@@ -23,11 +29,11 @@ namespace config
     inline constexpr uint8_t BRAKE_STEPPER_DIR_PIN{25};      // The brake stepper direction pin
     inline constexpr uint8_t STEERING_STEPPER_PULSE_PIN{22}; // The steering stepper pulse pin
     inline constexpr uint8_t STEERING_STEPPER_DIR_PIN{23};   // The steering stepper direction pin
-    inline constexpr int MAIN_MOTOR_OUPTUT_PIN{11};          // The main motor output pin
-    inline constexpr int FOOT_SWITCH_OUTPUT_PIN{9};          // The foot switch output pin
-    inline constexpr int TOW_SWITCH_OUTPUT_PIN{10};          // The tow switch output pin
-    inline constexpr int FORWARD_SWITCH_OUTPUT_PIN{12};      // The forward switch output pin
-    inline constexpr int REVERSE_SWITCH_OUTPUT_PIN{13};      // The reverse switch output pin
+    inline constexpr int MAIN_MOTOR_OUPTUT_PIN{13};          // The main motor output pin
+    inline constexpr int FOOT_SWITCH_OUTPUT_PIN{6};          // The foot switch output pin
+    inline constexpr int TOW_SWITCH_OUTPUT_PIN{7};           // The tow switch output pin
+    inline constexpr int FORWARD_SWITCH_OUTPUT_PIN{28};      // The forward switch output pin
+    inline constexpr int REVERSE_SWITCH_OUTPUT_PIN{5};       // The reverse switch output pin
 
     // Stepper
     inline constexpr int DEFAULT_STEPPER_STEPS_PER_REVOLUTION{400};                            // The default number of steps per revolution
@@ -53,7 +59,7 @@ namespace config
 
     // BUV
     inline constexpr int INPUT_REFRESH_RATE{5};                       // How often to read the inputs in ms
-    inline constexpr bool DISABLE_HOMING_MODE{true};                  // Disable the homing mode
+    inline constexpr bool DISABLE_HOMING_MODE{false};                 // Disable the homing mode
     inline constexpr int MINIMUM_OUTPUT_FOR_MAIN_MOTOR_THROTTLE{165}; // The minimum output to apply power to the main motor throttle
 
     // RCInput
