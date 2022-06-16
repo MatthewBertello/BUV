@@ -32,8 +32,8 @@ namespace config
     inline constexpr int MAIN_MOTOR_OUPTUT_PIN{13};          // The main motor output pin
     inline constexpr int FOOT_SWITCH_OUTPUT_PIN{6};          // The foot switch output pin
     inline constexpr int TOW_SWITCH_OUTPUT_PIN{7};           // The tow switch output pin
-    inline constexpr int FORWARD_SWITCH_OUTPUT_PIN{28};      // The forward switch output pin
-    inline constexpr int REVERSE_SWITCH_OUTPUT_PIN{5};       // The reverse switch output pin
+    inline constexpr int FORWARD_SWITCH_OUTPUT_PIN{5};       // The forward switch output pin
+    inline constexpr int REVERSE_SWITCH_OUTPUT_PIN{4};       // The reverse switch output pin
 
     // Stepper
     inline constexpr int DEFAULT_STEPPER_STEPS_PER_REVOLUTION{400};                            // The default number of steps per revolution
@@ -42,20 +42,20 @@ namespace config
     inline constexpr int DEFAULT_STEPPER_ERROR_THRESHOLD{10};                                  // The default error threshold
 
     // Brake stepper constants
-    inline constexpr int BRAKE_STEPPER_STEPS_PER_REVOLUTION{DEFAULT_STEPPER_STEPS_PER_REVOLUTION}; // The brake stepper number of steps per revolution
-    inline constexpr int BRAKE_STEPPER_MAX_SPEED{DEFAULT_STEPPER_MAX_SPEED};                       // The brake stepper maximum speed
-    inline constexpr int BRAKE_STEPPER_ACCELERATION{DEFAULT_STEPPER_ACCELERATION};                 // The brake stepper acceleration
-    inline constexpr int BRAKE_STEPPER_RANGE_MINIMUM{-BRAKE_STEPPER_STEPS_PER_REVOLUTION};         // The brake stepper minimum range
-    inline constexpr int BRAKE_STEPPER_RANGE_MAXIMUM{BRAKE_STEPPER_STEPS_PER_REVOLUTION};          // The brake stepper maximum range
-    inline constexpr int BRAKE_STEPPER_ERROR_THRESHOLD{DEFAULT_STEPPER_ERROR_THRESHOLD};           // The brake stepper error threshold
+    inline constexpr int BRAKE_STEPPER_STEPS_PER_REVOLUTION{400}; // The brake stepper number of steps per revolution
+    inline constexpr int BRAKE_STEPPER_MAX_SPEED{4000};           // The brake stepper maximum speed
+    inline constexpr int BRAKE_STEPPER_ACCELERATION{1600};        // The brake stepper acceleration
+    inline constexpr int BRAKE_STEPPER_RANGE_MINIMUM{-400};       // The brake stepper minimum range
+    inline constexpr int BRAKE_STEPPER_RANGE_MAXIMUM{400};        // The brake stepper maximum range
+    inline constexpr int BRAKE_STEPPER_ERROR_THRESHOLD{10};       // The brake stepper error threshold
 
     // Steering stepper constants
-    inline constexpr int STEERING_STEPPER_STEPS_PER_REVOLUTION{DEFAULT_STEPPER_STEPS_PER_REVOLUTION}; // The steering stepper number of steps per revolution
-    inline constexpr int STEERING_STEPPER_MAX_SPEED{DEFAULT_STEPPER_MAX_SPEED};                       // The steering stepper maximum speed
-    inline constexpr int STEERING_STEPPER_ACCELERATION{DEFAULT_STEPPER_ACCELERATION};                 // The steering stepper acceleration
-    inline constexpr int STEERING_STEPPER_RANGE_MINIMUM{-STEERING_STEPPER_STEPS_PER_REVOLUTION * 3};  // The steering stepper minimum range
-    inline constexpr int STEERING_STEPPER_RANGE_MAXIMUM{STEERING_STEPPER_STEPS_PER_REVOLUTION * 3};   // The steering stepper maximum range
-    inline constexpr int STEERING_STEPPER_ERROR_THRESHOLD{DEFAULT_STEPPER_ERROR_THRESHOLD};           // The steering stepper error threshold
+    inline constexpr int STEERING_STEPPER_STEPS_PER_REVOLUTION{400}; // The steering stepper number of steps per revolution
+    inline constexpr int STEERING_STEPPER_MAX_SPEED{4000};           // The steering stepper maximum speed
+    inline constexpr int STEERING_STEPPER_ACCELERATION{1600};        // The steering stepper acceleration
+    inline constexpr int STEERING_STEPPER_RANGE_MINIMUM{-800};       // The steering stepper minimum range
+    inline constexpr int STEERING_STEPPER_RANGE_MAXIMUM{800};        // The steering stepper maximum range
+    inline constexpr int STEERING_STEPPER_ERROR_THRESHOLD{10};       // The steering stepper error threshold
 
     // BUV
     inline constexpr int INPUT_REFRESH_RATE{5};                       // How often to read the inputs in ms
