@@ -38,10 +38,11 @@ unsigned long printRate{500};
  */
 void setup()
 {
-
-  //* !This code is for debugging purposes only
+  /**
+  // !This code is for debugging purposes only
   Serial.begin(9600); // Start the serial port
   Serial.println("Start");
+  */
 
   // Setup the output pins
   pinMode(config::MAIN_MOTOR_OUPTUT_PIN, OUTPUT);
@@ -108,7 +109,7 @@ void setup()
  */
 void loop()
 {
-
+  /**
   // !This code is for debugging purposes only
   // Print current values
   if (millis() - lastPrint > printRate)
@@ -123,7 +124,6 @@ void loop()
     }
 
     Serial.println();
-    /**
     Serial.print("gasJoystick input: ");
     Serial.print(gasJoystick.getCurrentInput());
     Serial.print(" ");
@@ -139,18 +139,18 @@ void loop()
     Serial.print("accel distance: ");
     Serial.print(brakeStepper.distanceToGo());
     Serial.println();
-    */
-    Serial.print("ci: ");
+    Serial.print("gearSwitch input: ");
     Serial.print(gearSwitch.getCurrentInput());
     Serial.print(" ");
-    Serial.print("forward/Reverse: ");
+    Serial.print("gearSwitch output: ");
     Serial.print(gearSwitch.getOutput());
     Serial.print(" ");
-    Serial.print("towSwitch: ");
+    Serial.print("towSwitch output: ");
     Serial.print(towSwitch.getOutput());
 
     Serial.println();
   }
+  */
 
   if (!homingModeSwitch.getOutput() && !config::DISABLE_HOMING_MODE) // If the top left switch is off run the homing function
   {
