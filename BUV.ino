@@ -252,7 +252,7 @@ void homingMode()
   case BRAKE:
     if (setHomeSwitch.getOutput())
     {
-      brakeStepper.setCurrentPosition(brakeStepper.currentPosition());
+      brakeStepper.setCurrentPosition(0);
     }
     brakeStepper.runSpeedPercentage(gasJoystick.getOutput() / 10);
     steeringStepper.runSpeedPercentage(0);
@@ -261,7 +261,7 @@ void homingMode()
   case STEERING:
     if (setHomeSwitch.getOutput())
     {
-      steeringStepper.setCurrentPosition(steeringStepper.currentPosition());
+      steeringStepper.setCurrentPosition(0);
     }
     steeringStepper.runSpeedPercentage(gasJoystick.getOutput() / 10);
     brakeStepper.runSpeedPercentage(0);
