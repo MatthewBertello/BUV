@@ -29,7 +29,7 @@ public:
     }
 
     /**
-     * If the distance to the target is less than the run threshold then the target position is set to the current position and the run function is called. Otherwise the run function is then called.
+     * If the distance to the target is less than the run threshold, then the target position is set to the current position and the run function is called. Otherwise the run function is called.
      */
     void runThreshold()
     {
