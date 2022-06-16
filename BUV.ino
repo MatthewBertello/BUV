@@ -29,9 +29,11 @@ RcInput gearSwitch{RcInput::THREE_POSITION_SWITCH, config::TOP_RIGHT_CENTER_SWIT
 Stepper brakeStepper{AccelStepper::DRIVER, config::BRAKE_STEPPER_PULSE_PIN, config::BRAKE_STEPPER_DIR_PIN};          // The stepper motor for the brake
 Stepper steeringStepper{AccelStepper::DRIVER, config::STEERING_STEPPER_PULSE_PIN, config::STEERING_STEPPER_DIR_PIN}; // The stepper motor for the steering wheel
 
+/**
 // !This code is for debugging purposes only
 unsigned long lastPrint;
 unsigned long printRate{500};
+*/
 
 /**
  * Runs once before the main loop
