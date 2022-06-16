@@ -16,6 +16,7 @@ public:
         THREE_POSITION_SWITCH, // a switch that has three positions
         DIAL                   // a dial
     };
+    bool invertOutput{false};                         // Whether the output should be inverted
     int inputChannel;                                 // The channel of the input
     int minInput{config::DEFAULT_RC_INPUT_MIN_INPUT}; // The minimum value the input can be
     int maxInput{config::DEFAULT_RC_INPUT_MAX_INPUT}; // The maximum value the input can be
@@ -78,33 +79,50 @@ public:
     }
 
     /**
+     * Calculates and updates the center input value
+     *
+     * @return The center input value
+     */
+    int getCenterInput()
+    {
+        centerInput = (minInput + maxInput) / 2;
+        return centerInput;
+    }
+
+    /**
      * Gets the current output of the input.
      *
      * @return The mapped output. A HIGH or LOW value for a switch or a value between the rangeMin and rangeMax for a joystick or dial.
      */
     int getOutput()
     {
+        int output = 0;
         switch (this->inputType)
         {
         case SWITCH:
-            return getSwitchOutput();
+            output = getSwitchOutput();
             break;
         case THREE_POSITION_SWITCH:
-            return getThreePositionSwitchOutput();
+            output = getThreePositionSwitchOutput();
             break;
         case CENTER_JOYSTICK:
-            return getCenterJoystickOutput();
+            output = getCenterJoystickOutput();
             break;
         case JOYSTICK:
-            return getJoystickOutput();
+            output = getJoystickOutput();
             break;
         case DIAL:
-            return getDialOutput();
+            output = getDialOutput();
             break;
         default:
-            return 0;
+            output = 0;
             break;
         }
+        if (invertOutput)
+        {
+            output *= -1;
+        }
+        return output;
     }
 
 private:
@@ -154,15 +172,15 @@ private:
             output = maxInput;
         if (output < minInput)
             output = minInput;
-        if (abs(getCurrentInput() - centerInput) < deadzone)
+        if (abs(getCurrentInput() - getCenterInput()) < deadzone)
             return 0;
-        if (output < centerInput)
+        if (output < getCenterInput())
         {
-            return mathFunctions::map(output, minInput, centerInput, minOutput, 0);
+            return mathFunctions::map(output, minInput, getCenterInput(), minOutput, 0);
         }
         else
         {
-            return mathFunctions::map(getCurrentInput(), centerInput, maxInput, 0, maxOutput);
+            return mathFunctions::map(getCurrentInput(), getCenterInput(), maxInput, 0, maxOutput);
         }
     }
 
@@ -186,24 +204,21 @@ private:
     /**
      * Gets the output for a switch that has three positions.
      *
-     * @return -1, 0 or 1
+     * @return -1, 0 or 1 based on the position of the switch
      */
     int getThreePositionSwitchOutput()
     {
-        int highDivider{(maxInput - centerInput) / 2};
-        int lowDivider{(centerInput - minInput) / 2};
+        int highDivider{(maxInput - getCenterInput()) / 2};
+        int lowDivider{(getCenterInput() - minInput) / 2};
         if (getCurrentInput() >= highDivider)
         {
             return 1;
         }
-        else if (getCurrentInput() < highDivider && getCurrentInput() > lowDivider)
-        {
-            return 0;
-        }
-        else
+        if (getCurrentInput() < lowDivider)
         {
             return -1;
         }
+        return 0;
     }
 };
 

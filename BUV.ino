@@ -29,9 +29,9 @@ RcInput gearSwitch{RcInput::THREE_POSITION_SWITCH, config::TOP_RIGHT_CENTER_SWIT
 Stepper brakeStepper{AccelStepper::DRIVER, config::BRAKE_STEPPER_PULSE_PIN, config::BRAKE_STEPPER_DIR_PIN};          // The stepper motor for the brake
 Stepper steeringStepper{AccelStepper::DRIVER, config::STEERING_STEPPER_PULSE_PIN, config::STEERING_STEPPER_DIR_PIN}; // The stepper motor for the steering wheel
 
-//* !This code is for debugging purposes only
+// !This code is for debugging purposes only
 unsigned long lastPrint;
-unsigned long printRate = 500;
+unsigned long printRate{500};
 
 /**
  * Runs once before the main loop
@@ -39,11 +39,9 @@ unsigned long printRate = 500;
 void setup()
 {
 
-  
   //* !This code is for debugging purposes only
   Serial.begin(9600); // Start the serial port
   Serial.println("Start");
-  
 
   // Setup the output pins
   pinMode(config::MAIN_MOTOR_OUPTUT_PIN, OUTPUT);
@@ -71,19 +69,22 @@ void setup()
   // Setup the homing mode switch
   homingModeSwitch.minInput = config::HOMING_MODE_SWITCH_MIN_INPUT;
   homingModeSwitch.maxInput = config::HOMING_MODE_SWITCH_MAX_INPUT;
+  homingModeSwitch.invertOutput = config::HOMING_MODE_SWITCH_INVERTED;
 
   // Setup the set home switch
   setHomeSwitch.minInput = config::SET_HOME_SWITCH_MIN_INPUT;
   setHomeSwitch.maxInput = config::SET_HOME_SWITCH_MAX_INPUT;
+  setHomeSwitch.invertOutput = config::SET_HOME_SWITCH_INVERTED;
 
   // Setup the tow switch
   towSwitch.minInput = config::TOW_SWITCH_MIN_INPUT;
   towSwitch.maxInput = config::TOW_SWITCH_MAX_INPUT;
+  towSwitch.invertOutput = config::TOW_SWITCH_INVERTED;
 
   // Setup the gear switch
   gearSwitch.minInput = config::GEAR_SWITCH_MIN_INPUT;
   gearSwitch.maxInput = config::GEAR_SWITCH_MAX_INPUT;
-  gearSwitch.centerInput = config::GEAR_SWITCH_CENTER_VALUE;
+  gearSwitch.invertOutput = config::GEAR_SWITCH_INVERTED;
 
   // Setup the brake stepper
   brakeStepper.stepsPerRevolution = config::BRAKE_STEPPER_STEPS_PER_REVOLUTION;
@@ -107,7 +108,7 @@ void setup()
  */
 void loop()
 {
-  
+
   // !This code is for debugging purposes only
   // Print current values
   if (millis() - lastPrint > printRate)
@@ -116,41 +117,40 @@ void loop()
     for (int i = 1; i <= 10; i++)
     {
       int x = ppm.latestValidChannelValue(i, 0);
-      //Serial.print(i);
+      // Serial.print(i);
       Serial.print(x);
       Serial.print(" ");
     }
-    
-     Serial.println();
-     /**
-     Serial.print("gasJoystick input: ");
-     Serial.print(gasJoystick.getCurrentInput());
-     Serial.print(" ");
-     Serial.print("gasJoystick output: ");
-     Serial.print(gasJoystick.getOutput());
-     Serial.print(" ");
-     Serial.print("brakeStepper position: ");
-     Serial.print(brakeStepper.currentPosition());
-     Serial.print(" ");
-     Serial.print("brakeStepper target Position: ");
-     Serial.print(brakeStepper.targetPosition());
-     Serial.print(" ");
-     Serial.print("accel distance: ");
-     Serial.print(brakeStepper.distanceToGo());
-     Serial.println();
-     */
-     Serial.print("ci: ");
-     Serial.print(gearSwitch.getCurrentInput());
-     Serial.print(" ");
-     Serial.print("forward/Reverse: ");
-     Serial.print(gearSwitch.getOutput());
-     Serial.print(" ");
-     Serial.print("towSwitch: ");
-     Serial.print(towSwitch.getOutput());
-     
-     Serial.println();
+
+    Serial.println();
+    /**
+    Serial.print("gasJoystick input: ");
+    Serial.print(gasJoystick.getCurrentInput());
+    Serial.print(" ");
+    Serial.print("gasJoystick output: ");
+    Serial.print(gasJoystick.getOutput());
+    Serial.print(" ");
+    Serial.print("brakeStepper position: ");
+    Serial.print(brakeStepper.currentPosition());
+    Serial.print(" ");
+    Serial.print("brakeStepper target Position: ");
+    Serial.print(brakeStepper.targetPosition());
+    Serial.print(" ");
+    Serial.print("accel distance: ");
+    Serial.print(brakeStepper.distanceToGo());
+    Serial.println();
+    */
+    Serial.print("ci: ");
+    Serial.print(gearSwitch.getCurrentInput());
+    Serial.print(" ");
+    Serial.print("forward/Reverse: ");
+    Serial.print(gearSwitch.getOutput());
+    Serial.print(" ");
+    Serial.print("towSwitch: ");
+    Serial.print(towSwitch.getOutput());
+
+    Serial.println();
   }
-  
 
   if (!homingModeSwitch.getOutput() && !config::DISABLE_HOMING_MODE) // If the top left switch is off run the homing function
   {
