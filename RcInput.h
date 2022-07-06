@@ -3,6 +3,7 @@
 #include "math.h"
 #include "config.h"
 #include "mathFunctions.h"
+#include "medianFilter.h"
 #include <PPMReader.h>
 
 class RcInput
@@ -24,7 +25,7 @@ public:
     int minOutput{0};                                 // The minimum output value
     int maxOutput{100};                               // The maximum output value
     int deadzone{config::DEFAULT_RC_INPUT_DEADZONE};  // The deadzone for the input
-    PPMReader *ppm;                                   // The PPM reader
+    medianFilter *filter;                             // The median filter for the input
     InputType inputType;                              // The type of input
 
     volatile unsigned long input; // Used by the interrupt to captture when the input pin changes states. This is volatile because it is accessed by the interrupt.
@@ -36,9 +37,9 @@ public:
      * @param inputChannel The pin the joystick is connected to
      * @param ppm The PPM reader
      */
-    RcInput(InputType inputType, int inputChannel, PPMReader *ppm)
+    RcInput(InputType inputType, int inputChannel, medianFilter *filter)
     {
-        this->ppm = ppm;
+        this->filter = filter;
         this->inputType = inputType;
         this->inputChannel = inputChannel;
         switch (inputType)
@@ -75,7 +76,7 @@ public:
      */
     int getCurrentInput()
     {
-        ppm->latestValidChannelValue(inputChannel, 0);
+        return filter->getMedian();
     }
 
     /**

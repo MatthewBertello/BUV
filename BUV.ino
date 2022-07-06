@@ -7,6 +7,8 @@
 #include "Stepper.h"
 #include "config.h"
 
+#include "medianFilter.h"
+
 unsigned long lastInputCheck{0}; // The last time the inputs were checked
 enum Steppers                    // A list of the steppers
 {
@@ -15,15 +17,16 @@ enum Steppers                    // A list of the steppers
 };
 
 PPMReader ppm(config::PPM_INTERRUPT_PIN, 10); // The PPM reader
+medianFilter *medianFilters[10];              // The median filters for the inputs
 Steppers stepperHoming = BRAKE;               // The stepper that is currently being homed
 
 // Setup the RC inputs
-RcInput gasJoystick{RcInput::CENTER_JOYSTICK, config::RIGHT_STICK_UP_DOWN, &ppm};          // The joystick for the gas/brake
-RcInput steeringJoystick{RcInput::CENTER_JOYSTICK, config::LEFT_STICK_LEFT_RIGHT, &ppm};   // The joystick for the steering
-RcInput homingModeSwitch{RcInput::SWITCH, config::TOP_LEFT_SWITCH, &ppm};                  // The homing mode switch
-RcInput setHomeSwitch{RcInput::SWITCH, config::TOP_LEFT_CENTER_SWITCH, &ppm};              // The set home switch
-RcInput towSwitch{RcInput::SWITCH, config::TOP_RIGHT_SWITCH, &ppm};                        // The tow switch
-RcInput gearSwitch{RcInput::THREE_POSITION_SWITCH, config::TOP_RIGHT_CENTER_SWITCH, &ppm}; // The forward/reverse Switch
+RcInput gasJoystick{RcInput::CENTER_JOYSTICK, config::RIGHT_STICK_UP_DOWN, medianFilters[config::RIGHT_STICK_UP_DOWN - 1]};              // The joystick for the gas/brake
+RcInput steeringJoystick{RcInput::CENTER_JOYSTICK, config::LEFT_STICK_LEFT_RIGHT, medianFilters[config::LEFT_STICK_LEFT_RIGHT - 1]};     // The joystick for the steering
+RcInput homingModeSwitch{RcInput::SWITCH, config::TOP_LEFT_SWITCH, medianFilters[config::TOP_LEFT_SWITCH - 1]};                          // The homing mode switch
+RcInput setHomeSwitch{RcInput::SWITCH, config::TOP_LEFT_CENTER_SWITCH, medianFilters[config::TOP_LEFT_CENTER_SWITCH - 1]};               // The set home switch
+RcInput towSwitch{RcInput::SWITCH, config::TOP_RIGHT_SWITCH, medianFilters[config::TOP_RIGHT_SWITCH - 1]};                               // The tow switch
+RcInput gearSwitch{RcInput::THREE_POSITION_SWITCH, config::TOP_RIGHT_CENTER_SWITCH, medianFilters[config::TOP_RIGHT_CENTER_SWITCH - 1]}; // The forward/reverse Switch
 
 // Setup the stepper motors
 Stepper brakeStepper{AccelStepper::DRIVER, config::BRAKE_STEPPER_PULSE_PIN, config::BRAKE_STEPPER_DIR_PIN};          // The stepper motor for the brake
@@ -45,6 +48,12 @@ void setup()
   Serial.begin(9600); // Start the serial port
   Serial.println("Start");
   */
+
+  // Setup the median filters
+  for (int i = 0; i < 10; i++)
+  {
+    medianFilters[i] = new medianFilter(5);
+  }
 
   // Setup the output pins
   pinMode(config::MAIN_MOTOR_OUPTUT_PIN, OUTPUT);
@@ -154,6 +163,11 @@ void loop()
   }
   */
 
+  // update the median filters
+  for (int i = 1; i <= 10; i++)
+  {
+    medianFilters[i - 1]->add(ppm.latestValidChannelValue(i, 0));
+  }
   if (!homingModeSwitch.getOutput() && !config::DISABLE_HOMING_MODE) // If the top left switch is off run the homing function
   {
     homingMode();
