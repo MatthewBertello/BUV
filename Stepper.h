@@ -2,7 +2,7 @@
 #define Stepper_h
 #include <AccelStepper.h>
 #include "config.h"
-#include "mathFunctions.h"
+#include "utilities.h"
 
 class Stepper : public AccelStepper
 {
@@ -47,7 +47,7 @@ public:
      */
     void moveToInRange(double target)
     {
-        int targetPosition{mathFunctions::map(target, -100, 100, rangeMinimum, rangeMaximum)};
+        int targetPosition{utilities::map(target, -100, 100, rangeMinimum, rangeMaximum)};
 
         AccelStepper::moveTo(targetPosition);
     }

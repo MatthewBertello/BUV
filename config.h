@@ -63,9 +63,11 @@ namespace config
     inline constexpr int MINIMUM_OUTPUT_FOR_MAIN_MOTOR_THROTTLE{165}; // The minimum output to apply power to the main motor throttle
 
     // RCInput
-    inline constexpr int DEFAULT_RC_INPUT_MIN_INPUT{1000}; // The default minimum input value
-    inline constexpr int DEFAULT_RC_INPUT_MAX_INPUT{2000}; // The default maximum input value
-    inline constexpr int DEFAULT_RC_INPUT_DEADZONE{10};    // The default deadzone
+    inline constexpr int DEFAULT_RC_INPUT_MIN_INPUT{1000};                // The default minimum input value
+    inline constexpr int DEFAULT_RC_INPUT_MAX_INPUT{2000};                // The default maximum input value
+    inline constexpr int DEFAULT_RC_INPUT_DEADZONE{10};                   // The default deadzone
+    inline constexpr int DEFAULT_RC_INPUT_MEDIAN_FILTER_SIZE{5};          // The default median filter size
+    inline constexpr int DEFAULT_RC_INPUT_MEDIAN_FILTER_INITIAL_VALUE{0}; // The default median filter initial value
 
     // Gas joystick constants
     inline constexpr int GAS_JOYSTICK_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT};                               // The gas joystick minimum input value
@@ -82,17 +84,17 @@ namespace config
     // Homing mode switch constants
     inline constexpr int HOMING_MODE_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The homing mode switch minimum input value
     inline constexpr int HOMING_MODE_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The homing mode switch maximum input value
-    inline constexpr bool HOMING_MODE_SWITCH_INVERTED{true};                       // If the homing mode switch is inverted
+    inline constexpr bool HOMING_MODE_SWITCH_INVERTED{false};                       // If the homing mode switch is inverted
 
     // Set home switch constants
     inline constexpr int SET_HOME_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The set home switch minimum input value
     inline constexpr int SET_HOME_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The set home switch maximum input value
-    inline constexpr bool SET_HOME_SWITCH_INVERTED{true};                       // If the set home switch is inverted
+    inline constexpr bool SET_HOME_SWITCH_INVERTED{false};                       // If the set home switch is inverted
 
     // Tow switch constants
     inline constexpr int TOW_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The tow switch minimum input value
     inline constexpr int TOW_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The tow switch maximum input value
-    inline constexpr bool TOW_SWITCH_INVERTED{true};                       // If the tow switch is inverted
+    inline constexpr bool TOW_SWITCH_INVERTED{false};                       // If the tow switch is inverted
 
     // gear switch constants
     inline constexpr int GEAR_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The gear switch minimum input value
