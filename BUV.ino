@@ -9,8 +9,6 @@
 
 #include "medianFilter.h"
 
-#include "LinkedList.h"
-
 unsigned long lastInputCheck{0}; // The last time the inputs were checked
 enum Steppers                    // A list of the steppers
 {
@@ -34,8 +32,8 @@ Stepper brakeStepper{AccelStepper::DRIVER, config::BRAKE_STEPPER_PULSE_PIN, conf
 Stepper steeringStepper{AccelStepper::DRIVER, config::STEERING_STEPPER_PULSE_PIN, config::STEERING_STEPPER_DIR_PIN}; // The stepper motor for the steering wheel
 
 // !This code is for debugging purposes only
-unsigned long lastPrint;
-unsigned long printRate{500};
+//unsigned long lastPrint;
+//unsigned long printRate{500};
 //!
 
 /**
@@ -45,8 +43,8 @@ void setup()
 {
 
   // !This code is for debugging purposes only
-  Serial.begin(9600); // Start the serial port
-  Serial.println("Start");
+  //Serial.begin(9600); // Start the serial port
+  //Serial.println("Start");
   //!
 
   // Setup the output pins
@@ -71,6 +69,7 @@ void setup()
   steeringJoystick.minInput = config::STEERING_JOYSTICK_MIN_INPUT;
   steeringJoystick.maxInput = config::STEERING_JOYSTICK_MAX_INPUT;
   steeringJoystick.deadzone = config::STEERING_JOYSTICK_DEADZONE;
+  steeringJoystick.invertOutput = config::STEERING_JOYSTICK_INVERTED;
 
   // Setup the homing mode switch
   homingModeSwitch.minInput = config::HOMING_MODE_SWITCH_MIN_INPUT;
@@ -118,31 +117,31 @@ void loop()
   // Serial.println("Loop");
   //  !This code is for debugging purposes only
   //  Print current values
-  if (millis() - lastPrint > printRate)
-  {
-    lastPrint = millis();
-    for (int i = 1; i <= 10; i++)
-    {
-       //int x = ppm.latestValidChannelValue(i, 0);
-       // int x = getPpmValue(i);
-       
-       //Serial.print(x);
-       //Serial.print(" ");
-    }
-    //gasJoystick.filter.print();
-    //Serial.println(gasJoystick.getCurrentInput());
-    // gasJoystick.filter.print();
-    // Serial.println();
-    // Serial.print("gasJoystick input: ");
-    // Serial.print(gasJoystick.getCurrentInput());
-    // Serial.print(" ");
-     Serial.print("gas: ");
-     Serial.print(gasJoystick.getOutput());
-     Serial.print(" ");
+  //if (millis() - lastPrint > printRate)
+  //{
+    //lastPrint = millis();
+    //for (int i = 1; i <= 10; i++)
+    //{
+      // int x = ppm.latestValidChannelValue(i, 0);
+      //  int x = getPpmValue(i);
 
-     Serial.print("steering: ");
-     Serial.print(steeringJoystick.getOutput());
-     Serial.print(" ");
+      // Serial.print(x);
+      // Serial.print(" ");
+    //}
+    // gasJoystick.filter.print();
+    // Serial.println(gasJoystick.getCurrentInput());
+    //  gasJoystick.filter.print();
+    //  Serial.println();
+    //  Serial.print("gasJoystick input: ");
+    //  Serial.print(gasJoystick.getCurrentInput());
+    //  Serial.print(" ");
+    //Serial.print("gas: ");
+    //Serial.print(gasJoystick.getOutput());
+    //Serial.print(" ");
+
+    //Serial.print("steering: ");
+    //Serial.print(steeringJoystick.getOutput());
+    //Serial.print(" ");
     // Serial.print(" ");
     // Serial.print("brakeStepper position: ");
     // Serial.print(brakeStepper.currentPosition());
@@ -153,29 +152,29 @@ void loop()
     // Serial.print("accel distance: ");
     // Serial.print(brakeStepper.distanceToGo());
     // Serial.println();
-     //Serial.print("gearSwitch input: ");
+    // Serial.print("gearSwitch input: ");
     // Serial.print(gearSwitch.getCurrentInput());
     // Serial.print(" ");
-     Serial.print("gear: ");
-     Serial.print(gearSwitch.getOutput());
-     Serial.print(" ");
+    //Serial.print("gear: ");
+    //Serial.print(gearSwitch.getOutput());
+    //Serial.print(" ");
     // Serial.print(" ");
-     Serial.print("tow: ");
-     Serial.print(towSwitch.getOutput());
-     Serial.print(" ");
-     Serial.print("homeMode: ");
-     Serial.print(homingModeSwitch.getOutput());
-     Serial.print(" ");
-     Serial.print("setHome: ");
-     Serial.print(setHomeSwitch.getOutput());
+    //Serial.print("tow: ");
+    //Serial.print(towSwitch.getOutput());
+    //Serial.print(" ");
+    //Serial.print("homeMode: ");
+    //Serial.print(homingModeSwitch.getOutput());
+    //Serial.print(" ");
+    //Serial.print("setHome: ");
+    //Serial.print(setHomeSwitch.getOutput());
 
-     Serial.println();
-  }
+    //Serial.println();
+  //}
   if (homingModeSwitch.getOutput() && !config::DISABLE_HOMING_MODE) // If the top left switch is off run the homing function
   {
-    //Serial.println("start");
+    // Serial.println("start");
     homingMode();
-    //Serial.println("end");
+    // Serial.println("end");
   }
   else // Otherwise run the normal operation
   {
@@ -185,7 +184,7 @@ void loop()
       lastInputCheck = millis(); // Update the last input check time
 
       //! This code is for debugging purposes only
-       unsigned long start = millis();
+      unsigned long start = millis();
       //!
 
       updateFilters();
@@ -231,7 +230,7 @@ void loop()
       }
       // End of brake input
 
-      steeringStepper.moveToInRange(steeringJoystick.getOutput());        // Set the target for the steering stepper
+      steeringStepper.moveToInRange(steeringJoystick.getOutput());         // Set the target for the steering stepper
       digitalWrite(config::TOW_SWITCH_OUTPUT_PIN, !towSwitch.getOutput()); // Set the tow switch output
 
       // set the gear switch output

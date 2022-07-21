@@ -71,6 +71,10 @@ public:
         }
     }
 
+    /**
+     * Add a new value to the filter
+     * @param value The value to add to the filter
+     */
     void updateFilter(int value)
     {
         filter.add(value);
@@ -222,10 +226,10 @@ private:
      */
     int getThreePositionSwitchOutput()
     {
-      
+
         int range = abs(maxInput - minInput);
-        int highDivider{maxInput - range/3};
-        int lowDivider{minInput + range/3};
+        int highDivider{maxInput - range / 3};
+        int lowDivider{minInput + range / 3};
         if (getCurrentInput() >= highDivider)
         {
             return 1;
@@ -235,18 +239,6 @@ private:
             return -1;
         }
         return 0;
-        
-        /**
-        if (getCurrentInput() >= 1750)
-        {
-            return 1;
-        }
-        if (getCurrentInput() < 1250)
-        {
-            return -1;
-        }
-        return 0;
-        */
     }
 };
 

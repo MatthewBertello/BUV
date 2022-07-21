@@ -7,15 +7,22 @@ class medianFilter
 public:
     int size = 1;
     int startPosition = 0;
-    // create an array of ints
     int *values;
 
+    /**
+     * Constructor
+     */
     medianFilter()
     {
         this->size = 1;
         this->values = new int[size];
     }
 
+    /**
+     * Constructor
+     * @param size Size of the filter
+     * @param initialValue The initial value the filter is populated with
+     */
     medianFilter(int size, int initialValue)
     {
         this->size = size;
@@ -26,7 +33,10 @@ public:
         }
     }
 
-    // Add a value to the filter
+    /**
+     * Add a value to the end of the list
+     * @param value
+     */
     void add(int value)
     {
         values[startPosition] = value;
@@ -37,7 +47,10 @@ public:
         }
     }
 
-    // Get the median value of the filter
+    /**
+     * Get the median value of the list
+     * @return the median value
+     */
     int getMedian()
     {
         int tempValues[size];
@@ -50,6 +63,11 @@ public:
         return tempValues[size / 2];
     }
 
+    /**
+     * Sort the array
+     * @param array the array to sort
+     * @param size the size of the array
+     */
     void sort(int *array, int size)
     {
         int temp;
@@ -67,6 +85,9 @@ public:
         }
     }
 
+    /**
+     * Print the array
+     */
     void print()
     {
         Serial.print("[");
