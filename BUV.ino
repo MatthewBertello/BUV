@@ -32,8 +32,8 @@ Stepper brakeStepper{AccelStepper::DRIVER, config::BRAKE_STEPPER_PULSE_PIN, conf
 Stepper steeringStepper{AccelStepper::DRIVER, config::STEERING_STEPPER_PULSE_PIN, config::STEERING_STEPPER_DIR_PIN}; // The stepper motor for the steering wheel
 
 // !This code is for debugging purposes only
-//unsigned long lastPrint;
-//unsigned long printRate{500};
+// unsigned long lastPrint;
+// unsigned long printRate{500};
 //!
 
 /**
@@ -43,8 +43,8 @@ void setup()
 {
 
   // !This code is for debugging purposes only
-  //Serial.begin(9600); // Start the serial port
-  //Serial.println("Start");
+  // Serial.begin(9600); // Start the serial port
+  // Serial.println("Start");
   //!
 
   // Setup the output pins
@@ -117,58 +117,58 @@ void loop()
   // Serial.println("Loop");
   //  !This code is for debugging purposes only
   //  Print current values
-  //if (millis() - lastPrint > printRate)
+  // if (millis() - lastPrint > printRate)
   //{
-    //lastPrint = millis();
-    //for (int i = 1; i <= 10; i++)
-    //{
-      // int x = ppm.latestValidChannelValue(i, 0);
-      //  int x = getPpmValue(i);
+  // lastPrint = millis();
+  // for (int i = 1; i <= 10; i++)
+  //{
+  // int x = ppm.latestValidChannelValue(i, 0);
+  //  int x = getPpmValue(i);
 
-      // Serial.print(x);
-      // Serial.print(" ");
-    //}
-    // gasJoystick.filter.print();
-    // Serial.println(gasJoystick.getCurrentInput());
-    //  gasJoystick.filter.print();
-    //  Serial.println();
-    //  Serial.print("gasJoystick input: ");
-    //  Serial.print(gasJoystick.getCurrentInput());
-    //  Serial.print(" ");
-    //Serial.print("gas: ");
-    //Serial.print(gasJoystick.getOutput());
-    //Serial.print(" ");
+  // Serial.print(x);
+  // Serial.print(" ");
+  //}
+  // gasJoystick.filter.print();
+  // Serial.println(gasJoystick.getCurrentInput());
+  //  gasJoystick.filter.print();
+  //  Serial.println();
+  //  Serial.print("gasJoystick input: ");
+  //  Serial.print(gasJoystick.getCurrentInput());
+  //  Serial.print(" ");
+  // Serial.print("gas: ");
+  // Serial.print(gasJoystick.getOutput());
+  // Serial.print(" ");
 
-    //Serial.print("steering: ");
-    //Serial.print(steeringJoystick.getOutput());
-    //Serial.print(" ");
-    // Serial.print(" ");
-    // Serial.print("brakeStepper position: ");
-    // Serial.print(brakeStepper.currentPosition());
-    // Serial.print(" ");
-    // Serial.print("brakeStepper target Position: ");
-    // Serial.print(brakeStepper.targetPosition());
-    // Serial.print(" ");
-    // Serial.print("accel distance: ");
-    // Serial.print(brakeStepper.distanceToGo());
-    // Serial.println();
-    // Serial.print("gearSwitch input: ");
-    // Serial.print(gearSwitch.getCurrentInput());
-    // Serial.print(" ");
-    //Serial.print("gear: ");
-    //Serial.print(gearSwitch.getOutput());
-    //Serial.print(" ");
-    // Serial.print(" ");
-    //Serial.print("tow: ");
-    //Serial.print(towSwitch.getOutput());
-    //Serial.print(" ");
-    //Serial.print("homeMode: ");
-    //Serial.print(homingModeSwitch.getOutput());
-    //Serial.print(" ");
-    //Serial.print("setHome: ");
-    //Serial.print(setHomeSwitch.getOutput());
+  // Serial.print("steering: ");
+  // Serial.print(steeringJoystick.getOutput());
+  // Serial.print(" ");
+  //  Serial.print(" ");
+  //  Serial.print("brakeStepper position: ");
+  //  Serial.print(brakeStepper.currentPosition());
+  //  Serial.print(" ");
+  //  Serial.print("brakeStepper target Position: ");
+  //  Serial.print(brakeStepper.targetPosition());
+  //  Serial.print(" ");
+  //  Serial.print("accel distance: ");
+  //  Serial.print(brakeStepper.distanceToGo());
+  //  Serial.println();
+  //  Serial.print("gearSwitch input: ");
+  //  Serial.print(gearSwitch.getCurrentInput());
+  //  Serial.print(" ");
+  // Serial.print("gear: ");
+  // Serial.print(gearSwitch.getOutput());
+  // Serial.print(" ");
+  //  Serial.print(" ");
+  // Serial.print("tow: ");
+  // Serial.print(towSwitch.getOutput());
+  // Serial.print(" ");
+  // Serial.print("homeMode: ");
+  // Serial.print(homingModeSwitch.getOutput());
+  // Serial.print(" ");
+  // Serial.print("setHome: ");
+  // Serial.print(setHomeSwitch.getOutput());
 
-    //Serial.println();
+  // Serial.println();
   //}
   if (homingModeSwitch.getOutput() && !config::DISABLE_HOMING_MODE) // If the top left switch is off run the homing function
   {
@@ -302,6 +302,9 @@ void homingMode()
   }
 }
 
+/**
+ * Updates the RC inputs with new values
+ */
 void updateFilters()
 {
   gasJoystick.updateFilter(getPpmValue(gasJoystick.inputChannel));
@@ -310,21 +313,15 @@ void updateFilters()
   setHomeSwitch.updateFilter(getPpmValue(setHomeSwitch.inputChannel));
   towSwitch.updateFilter(getPpmValue(towSwitch.inputChannel));
   gearSwitch.updateFilter(getPpmValue(gearSwitch.inputChannel));
-
-  // gasJoystick.updateFilter(10);
-  // steeringJoystick.updateFilter(10);
-  // homingModeSwitch.updateFilter(10);
-  // setHomeSwitch.updateFilter(10);
-  // towSwitch.updateFilter(10);
-  // gearSwitch.updateFilter(10);
 }
-
+/**
+ * Gets the value of a PPM channel and bounds it to an int
+ * @param channel The channel to get the value of
+ * @return The value of the channel
+ */
 int getPpmValue(int channel)
 {
   unsigned int value = ppm.latestValidChannelValue(channel, 0);
-  // unsigned int value = 20;
-  // return 10;
-  //  check if the unsigned int can be cast to an int
   if (value > 32767)
   {
     return 32767;

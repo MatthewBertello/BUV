@@ -86,7 +86,7 @@ public:
     }
 
     /**
-     * Print the array
+     * Prints the array to the serial port
      */
     void print()
     {
