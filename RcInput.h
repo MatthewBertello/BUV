@@ -2,7 +2,9 @@
 #define RcInput_h
 #include "math.h"
 #include "config.h"
-#include "mathFunctions.h"
+#include "utilities.h"
+#include "medianFilter.h"
+#include <PPMReader.h>
 
 class RcInput
 {
@@ -15,30 +17,33 @@ public:
         THREE_POSITION_SWITCH, // a switch that has three positions
         DIAL                   // a dial
     };
-    int inputPin;                                     // The pin the input is connected to
+    bool invertOutput{false};                         // Whether the output should be inverted
+    int inputChannel;                                 // The channel of the input
     int minInput{config::DEFAULT_RC_INPUT_MIN_INPUT}; // The minimum value the input can be
     int maxInput{config::DEFAULT_RC_INPUT_MAX_INPUT}; // The maximum value the input can be
     int centerInput{(minInput + maxInput) / 2};       // The center input value for a centered joystick or a  three position switch
     int minOutput{0};                                 // The minimum output value
     int maxOutput{100};                               // The maximum output value
     int deadzone{config::DEFAULT_RC_INPUT_DEADZONE};  // The deadzone for the input
-    InputType inputType;                              // The type of input
+    int lastOutput{0};                                // The last output value
+    bool recalculateOutput{true};                     // Whether the output should be recalculated
+
+    medianFilter filter; // The median filter for the input
+    InputType inputType; // The type of input
 
     volatile unsigned long input; // Used by the interrupt to captture when the input pin changes states. This is volatile because it is accessed by the interrupt.
-
-    int currentInput; // The current input value
 
     /**
      * Constructor
      *
      * @param inputType The type of input
-     * @param inputPin The pin the joystick is connected to
+     * @param inputChannel The pin the joystick is connected to
      */
-    RcInput(InputType inputType, int inputPin)
+    RcInput(InputType inputType, int inputChannel)
     {
+        this->filter = medianFilter(config::DEFAULT_RC_INPUT_MEDIAN_FILTER_SIZE, config::DEFAULT_RC_INPUT_MEDIAN_FILTER_INITIAL_VALUE);
         this->inputType = inputType;
-        this->inputPin = inputPin;
-        pinMode(inputPin, INPUT);
+        this->inputChannel = inputChannel;
         switch (inputType)
         {
         case JOYSTICK:
@@ -67,18 +72,39 @@ public:
     }
 
     /**
-     * Checks the state of the input pin. If the pin is high the time is recorded. If the pin is low the time difference is calculated and the current input is set to the difference.
+     * Add a new value to the filter
+     * @param value The value to add to the filter
      */
-    void pinStateChange()
+    void updateFilter(int value)
     {
-        if (digitalRead(this->inputPin) == HIGH)
+        filter.add(value);
+        recalculateOutput = true;
+    }
+
+    /**
+     * Gets the current input
+     *
+     * @return The current input
+     */
+    int getCurrentInput()
+    {
+        if (recalculateOutput)
         {
-            this->input = micros();
+            lastOutput = filter.getMedian();
+            recalculateOutput = false;
         }
-        if (digitalRead(this->inputPin) == LOW)
-        {
-            this->currentInput = micros() - this->input;
-        }
+        return lastOutput;
+    }
+
+    /**
+     * Calculates and updates the center input value
+     *
+     * @return The center input value
+     */
+    int getCenterInput()
+    {
+        centerInput = (minInput + maxInput) / 2;
+        return centerInput;
     }
 
     /**
@@ -88,27 +114,33 @@ public:
      */
     int getOutput()
     {
+        int output = 0;
         switch (this->inputType)
         {
         case SWITCH:
-            return getSwitchOutput();
+            output = getSwitchOutput();
             break;
         case THREE_POSITION_SWITCH:
-            return getThreePositionSwitchOutput();
+            output = getThreePositionSwitchOutput();
             break;
         case CENTER_JOYSTICK:
-            return getCenterJoystickOutput();
+            output = getCenterJoystickOutput();
             break;
         case JOYSTICK:
-            return getJoystickOutput();
+            output = getJoystickOutput();
             break;
         case DIAL:
-            return getDialOutput();
+            output = getDialOutput();
             break;
         default:
-            return 0;
+            output = 0;
             break;
         }
+        if (invertOutput)
+        {
+            output *= -1;
+        }
+        return output;
     }
 
 private:
@@ -119,13 +151,14 @@ private:
      */
     int getJoystickOutput()
     {
-        if (currentInput > maxInput)
-            currentInput = maxInput;
-        if (currentInput < minInput)
-            currentInput = minInput;
-        if (abs(currentInput) < deadzone)
+        int output = getCurrentInput();
+        if (output > maxInput)
+            output = maxInput;
+        if (output < minInput)
+            output = minInput;
+        if (abs(output) < deadzone)
             return 0;
-        return mathFunctions::map(currentInput, minInput, maxInput, minOutput, maxOutput);
+        return utilities::map(output, minInput, maxInput, minOutput, maxOutput);
     }
 
     /**
@@ -135,13 +168,14 @@ private:
      */
     int getDialOutput()
     {
-        if (currentInput > maxInput)
-            currentInput = maxInput;
-        if (currentInput < minInput)
-            currentInput = minInput;
-        if (abs(currentInput) < deadzone)
+        int output = getCurrentInput();
+        if (output > maxInput)
+            output = maxInput;
+        if (output < minInput)
+            output = minInput;
+        if (abs(output) < deadzone)
             return 0;
-        return mathFunctions::map(currentInput, minInput, maxInput, minOutput, maxOutput);
+        return utilities::map(output, minInput, maxInput, minOutput, maxOutput);
     }
 
     /**
@@ -151,19 +185,20 @@ private:
      */
     int getCenterJoystickOutput()
     {
-        if (currentInput > maxInput)
-            currentInput = maxInput;
-        if (currentInput < minInput)
-            currentInput = minInput;
-        if (abs(currentInput - centerInput) < deadzone)
+        int output = getCurrentInput();
+        if (output > maxInput)
+            output = maxInput;
+        if (output < minInput)
+            output = minInput;
+        if (abs(getCurrentInput() - getCenterInput()) < deadzone)
             return 0;
-        if (currentInput < centerInput)
+        if (output < getCenterInput())
         {
-            return mathFunctions::map(currentInput, minInput, centerInput, minOutput, 0);
+            return utilities::map(output, minInput, getCenterInput(), minOutput, 0);
         }
         else
         {
-            return mathFunctions::map(currentInput, centerInput, maxInput, 0, maxOutput);
+            return utilities::map(getCurrentInput(), getCenterInput(), maxInput, 0, maxOutput);
         }
     }
 
@@ -174,7 +209,7 @@ private:
      */
     int getSwitchOutput()
     {
-        if (currentInput > (maxInput + minInput) / 2)
+        if (getCurrentInput() > (maxInput + minInput) / 2)
         {
             return HIGH;
         }
@@ -187,24 +222,23 @@ private:
     /**
      * Gets the output for a switch that has three positions.
      *
-     * @return -1, 0 or 1
+     * @return -1, 0 or 1 based on the position of the switch
      */
     int getThreePositionSwitchOutput()
     {
-        int highDivider{(maxInput - centerInput) / 2};
-        int lowDivider{(centerInput - minInput) / 2};
-        if (currentInput >= highDivider)
+
+        int range = abs(maxInput - minInput);
+        int highDivider{maxInput - range / 3};
+        int lowDivider{minInput + range / 3};
+        if (getCurrentInput() >= highDivider)
         {
             return 1;
         }
-        else if (currentInput < highDivider && currentInput > lowDivider)
-        {
-            return 0;
-        }
-        else
+        if (getCurrentInput() < lowDivider)
         {
             return -1;
         }
+        return 0;
     }
 };
 

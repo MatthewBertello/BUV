@@ -2,7 +2,7 @@
 #define Stepper_h
 #include <AccelStepper.h>
 #include "config.h"
-#include "mathFunctions.h"
+#include "utilities.h"
 
 class Stepper : public AccelStepper
 {
@@ -29,7 +29,7 @@ public:
     }
 
     /**
-     * If the distance to the target is less than the run threshold then the target position is set to the current position and the run function is called. Otherwise the run function is then called.
+     * If the distance to the target is less than the run threshold, then the target position is set to the current position and the run function is called. Otherwise the run function is called.
      */
     void runThreshold()
     {
@@ -47,7 +47,7 @@ public:
      */
     void moveToInRange(double target)
     {
-        int targetPosition{mathFunctions::map(target, -100, 100, rangeMinimum, rangeMaximum)};
+        int targetPosition{utilities::map(target, -100, 100, rangeMinimum, rangeMaximum)};
 
         AccelStepper::moveTo(targetPosition);
     }
