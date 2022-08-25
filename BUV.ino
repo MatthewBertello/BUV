@@ -1,11 +1,11 @@
 #include <PPMReader.h>
-
 #include <AccelStepper.h>
 #include <MultiStepper.h>
 
 #include "RcInput.h"
 #include "Stepper.h"
 #include "config.h"
+#include "utilities.h"
 
 #include "medianFilter.h"
 
@@ -17,43 +17,35 @@ enum Steppers                    // A list of the steppers
 };
 
 PPMReader ppm(config::PPM_INTERRUPT_PIN, 10); // The PPM reader
-medianFilter *medianFilters[10];              // The median filters for the inputs
 Steppers stepperHoming = BRAKE;               // The stepper that is currently being homed
 
 // Setup the RC inputs
-RcInput gasJoystick{RcInput::CENTER_JOYSTICK, config::RIGHT_STICK_UP_DOWN, medianFilters[config::RIGHT_STICK_UP_DOWN - 1]};              // The joystick for the gas/brake
-RcInput steeringJoystick{RcInput::CENTER_JOYSTICK, config::LEFT_STICK_LEFT_RIGHT, medianFilters[config::LEFT_STICK_LEFT_RIGHT - 1]};     // The joystick for the steering
-RcInput homingModeSwitch{RcInput::SWITCH, config::TOP_LEFT_SWITCH, medianFilters[config::TOP_LEFT_SWITCH - 1]};                          // The homing mode switch
-RcInput setHomeSwitch{RcInput::SWITCH, config::TOP_LEFT_CENTER_SWITCH, medianFilters[config::TOP_LEFT_CENTER_SWITCH - 1]};               // The set home switch
-RcInput towSwitch{RcInput::SWITCH, config::TOP_RIGHT_SWITCH, medianFilters[config::TOP_RIGHT_SWITCH - 1]};                               // The tow switch
-RcInput gearSwitch{RcInput::THREE_POSITION_SWITCH, config::TOP_RIGHT_CENTER_SWITCH, medianFilters[config::TOP_RIGHT_CENTER_SWITCH - 1]}; // The forward/reverse Switch
+RcInput gasJoystick{RcInput::CENTER_JOYSTICK, config::RIGHT_STICK_UP_DOWN};          // The joystick for the gas/brake
+RcInput steeringJoystick{RcInput::CENTER_JOYSTICK, config::LEFT_STICK_LEFT_RIGHT};   // The joystick for the steering
+RcInput homingModeSwitch{RcInput::SWITCH, config::TOP_LEFT_SWITCH};                  // The homing mode switch
+RcInput setHomeSwitch{RcInput::SWITCH, config::TOP_LEFT_CENTER_SWITCH};              // The set home switch
+RcInput towSwitch{RcInput::SWITCH, config::TOP_RIGHT_SWITCH};                        // The tow switch
+RcInput gearSwitch{RcInput::THREE_POSITION_SWITCH, config::TOP_RIGHT_CENTER_SWITCH}; // The forward/reverse Switch
 
 // Setup the stepper motors
 Stepper brakeStepper{AccelStepper::DRIVER, config::BRAKE_STEPPER_PULSE_PIN, config::BRAKE_STEPPER_DIR_PIN};          // The stepper motor for the brake
 Stepper steeringStepper{AccelStepper::DRIVER, config::STEERING_STEPPER_PULSE_PIN, config::STEERING_STEPPER_DIR_PIN}; // The stepper motor for the steering wheel
 
-/**
 // !This code is for debugging purposes only
-unsigned long lastPrint;
-unsigned long printRate{500};
-*/
+// unsigned long lastPrint;
+// unsigned long printRate{500};
+//!
 
 /**
  * Runs once before the main loop
  */
 void setup()
 {
-  /**
-  // !This code is for debugging purposes only
-  Serial.begin(9600); // Start the serial port
-  Serial.println("Start");
-  */
 
-  // Setup the median filters
-  for (int i = 0; i < 10; i++)
-  {
-    medianFilters[i] = new medianFilter(5);
-  }
+  // !This code is for debugging purposes only
+  // Serial.begin(9600); // Start the serial port
+  // Serial.println("Start");
+  //!
 
   // Setup the output pins
   pinMode(config::MAIN_MOTOR_OUPTUT_PIN, OUTPUT);
@@ -77,6 +69,7 @@ void setup()
   steeringJoystick.minInput = config::STEERING_JOYSTICK_MIN_INPUT;
   steeringJoystick.maxInput = config::STEERING_JOYSTICK_MAX_INPUT;
   steeringJoystick.deadzone = config::STEERING_JOYSTICK_DEADZONE;
+  steeringJoystick.invertOutput = config::STEERING_JOYSTICK_INVERTED;
 
   // Setup the homing mode switch
   homingModeSwitch.minInput = config::HOMING_MODE_SWITCH_MIN_INPUT;
@@ -120,57 +113,68 @@ void setup()
  */
 void loop()
 {
-  /**
-  // !This code is for debugging purposes only
-  // Print current values
-  if (millis() - lastPrint > printRate)
-  {
-    lastPrint = millis();
-    for (int i = 1; i <= 10; i++)
-    {
-      int x = ppm.latestValidChannelValue(i, 0);
-      // Serial.print(i);
-      Serial.print(x);
-      Serial.print(" ");
-    }
 
-    Serial.println();
-    Serial.print("gasJoystick input: ");
-    Serial.print(gasJoystick.getCurrentInput());
-    Serial.print(" ");
-    Serial.print("gasJoystick output: ");
-    Serial.print(gasJoystick.getOutput());
-    Serial.print(" ");
-    Serial.print("brakeStepper position: ");
-    Serial.print(brakeStepper.currentPosition());
-    Serial.print(" ");
-    Serial.print("brakeStepper target Position: ");
-    Serial.print(brakeStepper.targetPosition());
-    Serial.print(" ");
-    Serial.print("accel distance: ");
-    Serial.print(brakeStepper.distanceToGo());
-    Serial.println();
-    Serial.print("gearSwitch input: ");
-    Serial.print(gearSwitch.getCurrentInput());
-    Serial.print(" ");
-    Serial.print("gearSwitch output: ");
-    Serial.print(gearSwitch.getOutput());
-    Serial.print(" ");
-    Serial.print("towSwitch output: ");
-    Serial.print(towSwitch.getOutput());
+  // Serial.println("Loop");
+  //  !This code is for debugging purposes only
+  //  Print current values
+  // if (millis() - lastPrint > printRate)
+  //{
+  // lastPrint = millis();
+  // for (int i = 1; i <= 10; i++)
+  //{
+  // int x = ppm.latestValidChannelValue(i, 0);
+  //  int x = getPpmValue(i);
 
-    Serial.println();
-  }
-  */
+  // Serial.print(x);
+  // Serial.print(" ");
+  //}
+  // gasJoystick.filter.print();
+  // Serial.println(gasJoystick.getCurrentInput());
+  //  gasJoystick.filter.print();
+  //  Serial.println();
+  //  Serial.print("gasJoystick input: ");
+  //  Serial.print(gasJoystick.getCurrentInput());
+  //  Serial.print(" ");
+  // Serial.print("gas: ");
+  // Serial.print(gasJoystick.getOutput());
+  // Serial.print(" ");
 
-  // update the median filters
-  for (int i = 1; i <= 10; i++)
+  // Serial.print("steering: ");
+  // Serial.print(steeringJoystick.getOutput());
+  // Serial.print(" ");
+  //  Serial.print(" ");
+  //  Serial.print("brakeStepper position: ");
+  //  Serial.print(brakeStepper.currentPosition());
+  //  Serial.print(" ");
+  //  Serial.print("brakeStepper target Position: ");
+  //  Serial.print(brakeStepper.targetPosition());
+  //  Serial.print(" ");
+  //  Serial.print("accel distance: ");
+  //  Serial.print(brakeStepper.distanceToGo());
+  //  Serial.println();
+  //  Serial.print("gearSwitch input: ");
+  //  Serial.print(gearSwitch.getCurrentInput());
+  //  Serial.print(" ");
+  // Serial.print("gear: ");
+  // Serial.print(gearSwitch.getOutput());
+  // Serial.print(" ");
+  //  Serial.print(" ");
+  // Serial.print("tow: ");
+  // Serial.print(towSwitch.getOutput());
+  // Serial.print(" ");
+  // Serial.print("homeMode: ");
+  // Serial.print(homingModeSwitch.getOutput());
+  // Serial.print(" ");
+  // Serial.print("setHome: ");
+  // Serial.print(setHomeSwitch.getOutput());
+
+  // Serial.println();
+  //}
+  if (homingModeSwitch.getOutput() && !config::DISABLE_HOMING_MODE) // If the top left switch is off run the homing function
   {
-    medianFilters[i - 1]->add(ppm.latestValidChannelValue(i, 0));
-  }
-  if (!homingModeSwitch.getOutput() && !config::DISABLE_HOMING_MODE) // If the top left switch is off run the homing function
-  {
+    // Serial.println("start");
     homingMode();
+    // Serial.println("end");
   }
   else // Otherwise run the normal operation
   {
@@ -178,6 +182,12 @@ void loop()
     if (millis() - lastInputCheck >= config::INPUT_REFRESH_RATE)
     {
       lastInputCheck = millis(); // Update the last input check time
+
+      //! This code is for debugging purposes only
+      unsigned long start = millis();
+      //!
+
+      updateFilters();
 
       // Get the input for the gas joystick and output it to the motor
       int gasInput{gasJoystick.getOutput()};
@@ -196,7 +206,7 @@ void loop()
       if (gasInput != 0)
       {
         digitalWrite(config::FOOT_SWITCH_OUTPUT_PIN, HIGH);
-        analogWrite(config::MAIN_MOTOR_OUPTUT_PIN, mathFunctions::map(abs(gasInput), 0, 100, config::MINIMUM_OUTPUT_FOR_MAIN_MOTOR_THROTTLE, 255));
+        analogWrite(config::MAIN_MOTOR_OUPTUT_PIN, utilities::map(abs(gasInput), 0, 100, config::MINIMUM_OUTPUT_FOR_MAIN_MOTOR_THROTTLE, 255));
       }
       else
       {
@@ -220,8 +230,8 @@ void loop()
       }
       // End of brake input
 
-      steeringStepper.moveToInRange(steeringJoystick.getOutput());        // Set the target for the steering stepper
-      digitalWrite(config::TOW_SWITCH_OUTPUT_PIN, towSwitch.getOutput()); // Set the tow switch output
+      steeringStepper.moveToInRange(steeringJoystick.getOutput());         // Set the target for the steering stepper
+      digitalWrite(config::TOW_SWITCH_OUTPUT_PIN, !towSwitch.getOutput()); // Set the tow switch output
 
       // set the gear switch output
       if (gearSwitch.getOutput() == 0)
@@ -239,6 +249,9 @@ void loop()
         digitalWrite(config::FORWARD_SWITCH_OUTPUT_PIN, LOW);
         digitalWrite(config::REVERSE_SWITCH_OUTPUT_PIN, HIGH);
       }
+      //! This code is for debugging purposes only
+      // Serial.println(millis() - start);
+      //!
     }
 
     // Run the stepper motors
@@ -252,6 +265,7 @@ void loop()
  */
 void homingMode()
 {
+  updateFilters();
   // Select which stepper to home
   if (steeringJoystick.getOutput() > 50)
   {
@@ -285,5 +299,35 @@ void homingMode()
 
   default:
     break;
+  }
+}
+
+/**
+ * Updates the RC inputs with new values
+ */
+void updateFilters()
+{
+  gasJoystick.updateFilter(getPpmValue(gasJoystick.inputChannel));
+  steeringJoystick.updateFilter(getPpmValue(steeringJoystick.inputChannel));
+  homingModeSwitch.updateFilter(getPpmValue(homingModeSwitch.inputChannel));
+  setHomeSwitch.updateFilter(getPpmValue(setHomeSwitch.inputChannel));
+  towSwitch.updateFilter(getPpmValue(towSwitch.inputChannel));
+  gearSwitch.updateFilter(getPpmValue(gearSwitch.inputChannel));
+}
+/**
+ * Gets the value of a PPM channel and bounds it to an int
+ * @param channel The channel to get the value of
+ * @return The value of the channel
+ */
+int getPpmValue(int channel)
+{
+  unsigned int value = ppm.latestValidChannelValue(channel, 0);
+  if (value > 32767)
+  {
+    return 32767;
+  }
+  else
+  {
+    return value;
   }
 }

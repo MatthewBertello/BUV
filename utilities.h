@@ -1,7 +1,7 @@
-#ifndef mathFunctions_h
-#define mathFunctions_h
+#ifndef utilities_h
+#define utilities_h
 
-namespace mathFunctions
+namespace utilities
 {
     /**
      * Maps a value from one range to another.

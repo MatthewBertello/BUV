@@ -2,7 +2,7 @@
 #define RcInput_h
 #include "math.h"
 #include "config.h"
-#include "mathFunctions.h"
+#include "utilities.h"
 #include "medianFilter.h"
 #include <PPMReader.h>
 
@@ -25,8 +25,11 @@ public:
     int minOutput{0};                                 // The minimum output value
     int maxOutput{100};                               // The maximum output value
     int deadzone{config::DEFAULT_RC_INPUT_DEADZONE};  // The deadzone for the input
-    medianFilter *filter;                             // The median filter for the input
-    InputType inputType;                              // The type of input
+    int lastOutput{0};                                // The last output value
+    bool recalculateOutput{true};                     // Whether the output should be recalculated
+
+    medianFilter filter; // The median filter for the input
+    InputType inputType; // The type of input
 
     volatile unsigned long input; // Used by the interrupt to captture when the input pin changes states. This is volatile because it is accessed by the interrupt.
 
@@ -35,11 +38,10 @@ public:
      *
      * @param inputType The type of input
      * @param inputChannel The pin the joystick is connected to
-     * @param ppm The PPM reader
      */
-    RcInput(InputType inputType, int inputChannel, medianFilter *filter)
+    RcInput(InputType inputType, int inputChannel)
     {
-        this->filter = filter;
+        this->filter = medianFilter(config::DEFAULT_RC_INPUT_MEDIAN_FILTER_SIZE, config::DEFAULT_RC_INPUT_MEDIAN_FILTER_INITIAL_VALUE);
         this->inputType = inputType;
         this->inputChannel = inputChannel;
         switch (inputType)
@@ -70,13 +72,28 @@ public:
     }
 
     /**
+     * Add a new value to the filter
+     * @param value The value to add to the filter
+     */
+    void updateFilter(int value)
+    {
+        filter.add(value);
+        recalculateOutput = true;
+    }
+
+    /**
      * Gets the current input
      *
      * @return The current input
      */
     int getCurrentInput()
     {
-        return filter->getMedian();
+        if (recalculateOutput)
+        {
+            lastOutput = filter.getMedian();
+            recalculateOutput = false;
+        }
+        return lastOutput;
     }
 
     /**
@@ -141,7 +158,7 @@ private:
             output = minInput;
         if (abs(output) < deadzone)
             return 0;
-        return mathFunctions::map(output, minInput, maxInput, minOutput, maxOutput);
+        return utilities::map(output, minInput, maxInput, minOutput, maxOutput);
     }
 
     /**
@@ -158,7 +175,7 @@ private:
             output = minInput;
         if (abs(output) < deadzone)
             return 0;
-        return mathFunctions::map(output, minInput, maxInput, minOutput, maxOutput);
+        return utilities::map(output, minInput, maxInput, minOutput, maxOutput);
     }
 
     /**
@@ -177,11 +194,11 @@ private:
             return 0;
         if (output < getCenterInput())
         {
-            return mathFunctions::map(output, minInput, getCenterInput(), minOutput, 0);
+            return utilities::map(output, minInput, getCenterInput(), minOutput, 0);
         }
         else
         {
-            return mathFunctions::map(getCurrentInput(), getCenterInput(), maxInput, 0, maxOutput);
+            return utilities::map(getCurrentInput(), getCenterInput(), maxInput, 0, maxOutput);
         }
     }
 
@@ -209,8 +226,10 @@ private:
      */
     int getThreePositionSwitchOutput()
     {
-        int highDivider{(maxInput - getCenterInput()) / 2};
-        int lowDivider{(getCenterInput() - minInput) / 2};
+
+        int range = abs(maxInput - minInput);
+        int highDivider{maxInput - range / 3};
+        int lowDivider{minInput + range / 3};
         if (getCurrentInput() >= highDivider)
         {
             return 1;

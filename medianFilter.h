@@ -5,54 +5,75 @@ class medianFilter
 {
 
 public:
-    int size = 0;
-    int *values = NULL;
+    int size = 1;
+    int startPosition = 0;
+    int *values;
 
-    medianFilter(int size)
+    /**
+     * Constructor
+     */
+    medianFilter()
+    {
+        this->size = 1;
+        this->values = new int[size];
+    }
+
+    /**
+     * Constructor
+     * @param size Size of the filter
+     * @param initialValue The initial value the filter is populated with
+     */
+    medianFilter(int size, int initialValue)
     {
         this->size = size;
-        values = new int[size];
-    }
-
-    // Add a value to the filter
-    void add(int value)
-    {
-        for (int i = 0; i < size - 1; i++)
-        {
-            values[i] = values[i + 1];
-        }
-        values[size - 1] = value;
-    }
-
-    // Get the median value of the filter
-    int getMedian()
-    {
-        int median = 0;
-        int *tempArray = new int[size];
+        this->values = new int[size];
         for (int i = 0; i < size; i++)
         {
-            tempArray[i] = values[i];
+            values[i] = initialValue;
         }
-        sort(tempArray, size);
-        if (size % 2 == 0)
-        {
-            median = (tempArray[size / 2] + tempArray[size / 2 - 1]) / 2;
-        }
-        else
-        {
-            median = tempArray[size / 2];
-        }
-        delete[] tempArray;
-        return median;
     }
 
-    // Sort an array
-    void sort(int *array, int arraySize)
+    /**
+     * Add a value to the end of the list
+     * @param value
+     */
+    void add(int value)
+    {
+        values[startPosition] = value;
+        startPosition++;
+        if (startPosition == size)
+        {
+            startPosition = 0;
+        }
+    }
+
+    /**
+     * Get the median value of the list
+     * @return the median value
+     */
+    int getMedian()
+    {
+        int tempValues[size];
+        for (int i = 0; i < size; i++)
+        {
+            tempValues[i] = values[i];
+        }
+
+        sort(tempValues, size);
+        return tempValues[size / 2];
+    }
+
+    /**
+     * Sort the array
+     * @param array the array to sort
+     * @param size the size of the array
+     */
+    void sort(int *array, int size)
     {
         int temp;
-        for (int i = 0; i < arraySize - 1; i++)
+        for (int i = 0; i < size; i++)
         {
-            for (int j = 0; j < arraySize - 1; j++)
+            for (int j = 0; j < size - 1; j++)
             {
                 if (array[j] > array[j + 1])
                 {
@@ -62,6 +83,23 @@ public:
                 }
             }
         }
+    }
+
+    /**
+     * Prints the array to the serial port
+     */
+    void print()
+    {
+        Serial.print("[");
+        for (int i = 0; i < size; i++)
+        {
+            Serial.print(values[i]);
+            if (i != size - 1)
+            {
+                Serial.print(", ");
+            }
+        }
+        Serial.print("]");
     }
 };
 

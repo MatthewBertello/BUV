@@ -29,7 +29,7 @@ namespace config
     inline constexpr uint8_t BRAKE_STEPPER_DIR_PIN{25};      // The brake stepper direction pin
     inline constexpr uint8_t STEERING_STEPPER_PULSE_PIN{22}; // The steering stepper pulse pin
     inline constexpr uint8_t STEERING_STEPPER_DIR_PIN{23};   // The steering stepper direction pin
-    inline constexpr int MAIN_MOTOR_OUPTUT_PIN{13};          // The main motor output pin
+    inline constexpr int MAIN_MOTOR_OUPTUT_PIN{12};          // The main motor output pin
     inline constexpr int FOOT_SWITCH_OUTPUT_PIN{6};          // The foot switch output pin
     inline constexpr int TOW_SWITCH_OUTPUT_PIN{7};           // The tow switch output pin
     inline constexpr int FORWARD_SWITCH_OUTPUT_PIN{5};       // The forward switch output pin
@@ -43,16 +43,16 @@ namespace config
 
     // Brake stepper constants
     inline constexpr int BRAKE_STEPPER_STEPS_PER_REVOLUTION{400}; // The brake stepper number of steps per revolution
-    inline constexpr int BRAKE_STEPPER_MAX_SPEED{4000};           // The brake stepper maximum speed
-    inline constexpr int BRAKE_STEPPER_ACCELERATION{1600};        // The brake stepper acceleration
-    inline constexpr int BRAKE_STEPPER_RANGE_MINIMUM{-400};       // The brake stepper minimum range
-    inline constexpr int BRAKE_STEPPER_RANGE_MAXIMUM{400};        // The brake stepper maximum range
+    inline constexpr int BRAKE_STEPPER_MAX_SPEED{800};           // The brake stepper maximum speed
+    inline constexpr int BRAKE_STEPPER_ACCELERATION{800};        // The brake stepper acceleration
+    inline constexpr int BRAKE_STEPPER_RANGE_MINIMUM{-109 };       // The brake stepper minimum range
+    inline constexpr int BRAKE_STEPPER_RANGE_MAXIMUM{109};        // The brake stepper maximum range
     inline constexpr int BRAKE_STEPPER_ERROR_THRESHOLD{10};       // The brake stepper error threshold
 
     // Steering stepper constants
     inline constexpr int STEERING_STEPPER_STEPS_PER_REVOLUTION{400}; // The steering stepper number of steps per revolution
-    inline constexpr int STEERING_STEPPER_MAX_SPEED{4000};           // The steering stepper maximum speed
-    inline constexpr int STEERING_STEPPER_ACCELERATION{1600};        // The steering stepper acceleration
+    inline constexpr int STEERING_STEPPER_MAX_SPEED{800};           // The steering stepper maximum speed
+    inline constexpr int STEERING_STEPPER_ACCELERATION{3200};        // The steering stepper acceleration
     inline constexpr int STEERING_STEPPER_RANGE_MINIMUM{-800};       // The steering stepper minimum range
     inline constexpr int STEERING_STEPPER_RANGE_MAXIMUM{800};        // The steering stepper maximum range
     inline constexpr int STEERING_STEPPER_ERROR_THRESHOLD{10};       // The steering stepper error threshold
@@ -63,9 +63,11 @@ namespace config
     inline constexpr int MINIMUM_OUTPUT_FOR_MAIN_MOTOR_THROTTLE{165}; // The minimum output to apply power to the main motor throttle
 
     // RCInput
-    inline constexpr int DEFAULT_RC_INPUT_MIN_INPUT{1000}; // The default minimum input value
-    inline constexpr int DEFAULT_RC_INPUT_MAX_INPUT{2000}; // The default maximum input value
-    inline constexpr int DEFAULT_RC_INPUT_DEADZONE{10};    // The default deadzone
+    inline constexpr int DEFAULT_RC_INPUT_MIN_INPUT{1000};                // The default minimum input value
+    inline constexpr int DEFAULT_RC_INPUT_MAX_INPUT{2000};                // The default maximum input value
+    inline constexpr int DEFAULT_RC_INPUT_DEADZONE{10};                   // The default deadzone
+    inline constexpr int DEFAULT_RC_INPUT_MEDIAN_FILTER_SIZE{10};          // The default median filter size
+    inline constexpr int DEFAULT_RC_INPUT_MEDIAN_FILTER_INITIAL_VALUE{0}; // The default median filter initial value
 
     // Gas joystick constants
     inline constexpr int GAS_JOYSTICK_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT};                               // The gas joystick minimum input value
@@ -78,21 +80,22 @@ namespace config
     inline constexpr int STEERING_JOYSTICK_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT};                                         // The steering joystick maximum input value
     inline constexpr int STEERING_JOYSTICK_DEADZONE{DEFAULT_RC_INPUT_DEADZONE};                                           // The steering joystick deadzone
     inline constexpr int STEERING_JOYSTICK_CENTER_VALUE{(STEERING_JOYSTICK_MAX_INPUT + STEERING_JOYSTICK_MIN_INPUT) / 2}; // The steering joystick center value
+    inline constexpr bool STEERING_JOYSTICK_INVERTED{true};                       // If the steering joystick is inverted
 
     // Homing mode switch constants
     inline constexpr int HOMING_MODE_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The homing mode switch minimum input value
     inline constexpr int HOMING_MODE_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The homing mode switch maximum input value
-    inline constexpr bool HOMING_MODE_SWITCH_INVERTED{true};                       // If the homing mode switch is inverted
+    inline constexpr bool HOMING_MODE_SWITCH_INVERTED{false};                       // If the homing mode switch is inverted
 
     // Set home switch constants
     inline constexpr int SET_HOME_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The set home switch minimum input value
     inline constexpr int SET_HOME_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The set home switch maximum input value
-    inline constexpr bool SET_HOME_SWITCH_INVERTED{true};                       // If the set home switch is inverted
+    inline constexpr bool SET_HOME_SWITCH_INVERTED{false};                       // If the set home switch is inverted
 
     // Tow switch constants
     inline constexpr int TOW_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The tow switch minimum input value
     inline constexpr int TOW_SWITCH_MAX_INPUT{DEFAULT_RC_INPUT_MAX_INPUT}; // The tow switch maximum input value
-    inline constexpr bool TOW_SWITCH_INVERTED{true};                       // If the tow switch is inverted
+    inline constexpr bool TOW_SWITCH_INVERTED{false};                       // If the tow switch is inverted
 
     // gear switch constants
     inline constexpr int GEAR_SWITCH_MIN_INPUT{DEFAULT_RC_INPUT_MIN_INPUT}; // The gear switch minimum input value
