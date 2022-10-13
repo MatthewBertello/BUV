@@ -6,6 +6,7 @@
 #include "Stepper.h"
 #include "config.h"
 #include "utilities.h"
+#include "PID.h"
 
 #include "medianFilter.h"
 
@@ -18,6 +19,8 @@ enum Steppers                    // A list of the steppers
 
 PPMReader ppm(config::PPM_INTERRUPT_PIN, 10); // The PPM reader
 Steppers stepperHoming = BRAKE;               // The stepper that is currently being homed
+
+PID straightDrive{1, 0, 0, 0};
 
 // Setup the RC inputs
 RcInput gasJoystick{RcInput::CENTER_JOYSTICK, config::RIGHT_STICK_UP_DOWN};          // The joystick for the gas/brake
@@ -230,7 +233,14 @@ void loop()
       }
       // End of brake input
 
-      steeringStepper.moveToInRange(steeringJoystick.getOutput());         // Set the target for the steering stepper
+      if (setHomeSwitch.getOutput())
+      {
+        driveStraight();
+      }
+      else
+      {
+        steeringStepper.moveToInRange(steeringJoystick.getOutput()); // Set the target for the steering stepper
+      }
       digitalWrite(config::TOW_SWITCH_OUTPUT_PIN, !towSwitch.getOutput()); // Set the tow switch output
 
       // set the gear switch output
@@ -259,6 +269,26 @@ void loop()
     steeringStepper.runThreshold();
   }
 } // End of main loop
+
+void driveStraight()
+{
+  int newSteeringInput = straightDrive.update(getRightEncodervalue() - getLeftEncodervalue());
+  if (abs(newSteeringInput) > 100)
+  {
+    newSteeringInput = 100 * utilities::sign(newSteeringInput);
+  }
+  steeringStepper.moveInRange(newSteeringInput);
+}
+
+int getLeftEncodervalue()
+{
+  return 0;
+}
+
+int getRightEncodervalue()
+{
+  return 0;
+}
 
 /**
  * A function to set the home positions of the steppers
