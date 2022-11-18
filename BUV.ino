@@ -1,11 +1,17 @@
 #include <PPMReader.h>
 #include <AccelStepper.h>
 #include <MultiStepper.h>
+#include <ACE128.h>
 
 #include "RcInput.h"
 #include "Stepper.h"
 #include "config.h"
 #include "utilities.h"
+<<<<<<< Updated upstream
+=======
+#include "PID.h"
+#include "BournsEncoder.h"
+>>>>>>> Stashed changes
 
 #include "medianFilter.h"
 
@@ -31,6 +37,16 @@ RcInput gearSwitch{RcInput::THREE_POSITION_SWITCH, config::TOP_RIGHT_CENTER_SWIT
 Stepper brakeStepper{AccelStepper::DRIVER, config::BRAKE_STEPPER_PULSE_PIN, config::BRAKE_STEPPER_DIR_PIN};          // The stepper motor for the brake
 Stepper steeringStepper{AccelStepper::DRIVER, config::STEERING_STEPPER_PULSE_PIN, config::STEERING_STEPPER_DIR_PIN}; // The stepper motor for the steering wheel
 
+// Setup the Bourns encoders
+BournsEncoder leftEncoder{config::LEFT_ENCODER_PIN_1,
+                          config::LEFT_ENCODER_PIN_2,
+                          config::LEFT_ENCODER_PIN_3,
+                          config::LEFT_ENCODER_PIN_4,
+                          config::LEFT_ENCODER_PIN_5,
+                          config::LEFT_ENCODER_PIN_6,
+                          config::LEFT_ENCODER_PIN_7,
+                          config::LEFT_ENCODER_PIN_8};
+
 // !This code is for debugging purposes only
 // unsigned long lastPrint;
 // unsigned long printRate{500};
@@ -43,9 +59,10 @@ void setup()
 {
 
   // !This code is for debugging purposes only
-  // Serial.begin(9600); // Start the serial port
-  // Serial.println("Start");
-  //!
+  Serial.begin(9600); // Start the serial port
+  Serial.println("Start");
+
+  straightDrive.setTarget(0);
 
   // Setup the output pins
   pinMode(config::MAIN_MOTOR_OUPTUT_PIN, OUTPUT);
@@ -114,6 +131,7 @@ void setup()
 void loop()
 {
 
+<<<<<<< Updated upstream
   // Serial.println("Loop");
   //  !This code is for debugging purposes only
   //  Print current values
@@ -259,6 +277,108 @@ void loop()
     steeringStepper.runThreshold();
   }
 } // End of main loop
+=======
+  Serial.println(leftEncoder.getPosition());
+  // delay(1000);
+  // leftEncoder.recordPositions();
+}
+//   if (homingModeSwitch.getOutput() && !config::DISABLE_HOMING_MODE) // If the top left switch is off run the homing function
+//   {
+//     // Serial.println("start");
+//     homingMode();
+//     // Serial.println("end");
+//   }
+//   else // Otherwise run the normal operation
+//   {
+//     // if it has been long enough since the last input check get the new inputs
+//     if (millis() - lastInputCheck >= config::INPUT_REFRESH_RATE)
+//     {
+//       lastInputCheck = millis(); // Update the last input check time
+
+//       //! This code is for debugging purposes only
+//       unsigned long start = millis();
+//       //!
+
+//       updateFilters();
+
+//       // Get the input for the gas joystick and output it to the motor
+//       int gasInput{gasJoystick.getOutput()};
+//       if (gearSwitch.getOutput() == 1 && gasInput < 0)
+//       {
+//         gasInput = 0;
+//       }
+//       else if (gearSwitch.getOutput() == -1 && gasInput > 0)
+//       {
+//         gasInput = 0;
+//       }
+//       else if (gearSwitch.getOutput() == 0)
+//       {
+//         gasInput = 0;
+//       }
+//       if (gasInput != 0)
+//       {
+//         digitalWrite(config::FOOT_SWITCH_OUTPUT_PIN, HIGH);
+//         analogWrite(config::MAIN_MOTOR_OUPTUT_PIN, utilities::map(abs(gasInput), 0, 100, config::MINIMUM_OUTPUT_FOR_MAIN_MOTOR_THROTTLE, 255));
+//       }
+//       else
+//       {
+//         digitalWrite(config::FOOT_SWITCH_OUTPUT_PIN, LOW);
+//         analogWrite(config::MAIN_MOTOR_OUPTUT_PIN, 0);
+//       }
+//       // End of gas input
+
+//       // Get the input for the brake joystick and output it to the motor
+//       if ((gearSwitch.getOutput() == 1 || gearSwitch.getOutput() == 0) && gasJoystick.getOutput() < 0)
+//       {
+//         brakeStepper.moveToInRange(-gasJoystick.getOutput());
+//       }
+//       else if (gearSwitch.getOutput() == -1 && gasJoystick.getOutput() > 0)
+//       {
+//         brakeStepper.moveToInRange(gasJoystick.getOutput());
+//       }
+//       else
+//       {
+//         brakeStepper.moveToInRange(0);
+//       }
+//       // End of brake input
+
+//       if (setHomeSwitch.getOutput())
+//       {
+//         driveStraight();
+//       }
+//       else
+//       {
+//         steeringStepper.moveToInRange(steeringJoystick.getOutput()); // Set the target for the steering stepper
+//       }
+//       digitalWrite(config::TOW_SWITCH_OUTPUT_PIN, !towSwitch.getOutput()); // Set the tow switch output
+
+//       // set the gear switch output
+//       if (gearSwitch.getOutput() == 0)
+//       {
+//         digitalWrite(config::FORWARD_SWITCH_OUTPUT_PIN, LOW);
+//         digitalWrite(config::REVERSE_SWITCH_OUTPUT_PIN, LOW);
+//       }
+//       else if (gearSwitch.getOutput() == 1)
+//       {
+//         digitalWrite(config::FORWARD_SWITCH_OUTPUT_PIN, HIGH);
+//         digitalWrite(config::REVERSE_SWITCH_OUTPUT_PIN, LOW);
+//       }
+//       else if (gearSwitch.getOutput() == -1)
+//       {
+//         digitalWrite(config::FORWARD_SWITCH_OUTPUT_PIN, LOW);
+//         digitalWrite(config::REVERSE_SWITCH_OUTPUT_PIN, HIGH);
+//       }
+//       //! This code is for debugging purposes only
+//       // Serial.println(millis() - start);
+//       //!
+//     }
+
+//     // Run the stepper motors
+//     brakeStepper.runThreshold();
+//     steeringStepper.runThreshold();
+//   }
+// } // End of main loop
+>>>>>>> Stashed changes
 
 /**
  * A function to set the home positions of the steppers
