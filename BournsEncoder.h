@@ -36,13 +36,6 @@ public:
         {
             output += digitalRead(this->pins[i]) * pow(2, i) + .5;
         }
-        //for (int i = 7; i >= 0; i--)
-        //{
-        //    Serial.print(i);
-        //    Serial.print(": ");
-        //    Serial.println(digitalRead(this->pins[i]));
-        //}
-        //Serial.println("output: " + String(output));
         return INPUTS[output - 1];
     }
     void recordPositions()

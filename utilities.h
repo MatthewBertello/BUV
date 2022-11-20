@@ -17,6 +17,18 @@ namespace utilities
     {
         return (x - minimumInput) * (maximumOutput - minimumOutput) / (maximumInput - minimumInput) + minimumOutput;
     }
+
+    /**
+     * Gets the sign of a value.
+     *
+     * @param value The value to get the sign of
+     * @return The sign of the value
+     */
+    int sign(double value)
+    {
+        return (value > 0) - (value < 0);
+    }
+
 }
 
 #endif

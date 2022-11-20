@@ -233,7 +233,7 @@ void loop()
 
 void driveStraight()
 {
-  int newSteeringInput = straightDrive.update(getRightEncodervalue() - getLeftEncodervalue());
+  int newSteeringInput = straightDrive.update(getRightEncoderValue() - getLeftEncoderValue());
   if (abs(newSteeringInput) > 100)
   {
     newSteeringInput = 100 * utilities::sign(newSteeringInput);
@@ -241,12 +241,12 @@ void driveStraight()
   steeringStepper.moveInRange(newSteeringInput);
 }
 
-int getLeftEncodervalue()
+int getLeftEncoderValue()
 {
   return 0;
 }
 
-int getRightEncodervalue()
+int getRightEncoderValue()
 {
   return 0;
 }
