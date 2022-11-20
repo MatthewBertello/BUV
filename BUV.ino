@@ -7,11 +7,8 @@
 #include "Stepper.h"
 #include "config.h"
 #include "utilities.h"
-<<<<<<< Updated upstream
-=======
 #include "PID.h"
 #include "BournsEncoder.h"
->>>>>>> Stashed changes
 
 #include "medianFilter.h"
 
@@ -24,6 +21,8 @@ enum Steppers                    // A list of the steppers
 
 PPMReader ppm(config::PPM_INTERRUPT_PIN, 10); // The PPM reader
 Steppers stepperHoming = BRAKE;               // The stepper that is currently being homed
+
+PID straightDrive{1, 0, 0, 0};
 
 // Setup the RC inputs
 RcInput gasJoystick{RcInput::CENTER_JOYSTICK, config::RIGHT_STICK_UP_DOWN};          // The joystick for the gas/brake
@@ -131,153 +130,6 @@ void setup()
 void loop()
 {
 
-<<<<<<< Updated upstream
-  // Serial.println("Loop");
-  //  !This code is for debugging purposes only
-  //  Print current values
-  // if (millis() - lastPrint > printRate)
-  //{
-  // lastPrint = millis();
-  // for (int i = 1; i <= 10; i++)
-  //{
-  // int x = ppm.latestValidChannelValue(i, 0);
-  //  int x = getPpmValue(i);
-
-  // Serial.print(x);
-  // Serial.print(" ");
-  //}
-  // gasJoystick.filter.print();
-  // Serial.println(gasJoystick.getCurrentInput());
-  //  gasJoystick.filter.print();
-  //  Serial.println();
-  //  Serial.print("gasJoystick input: ");
-  //  Serial.print(gasJoystick.getCurrentInput());
-  //  Serial.print(" ");
-  // Serial.print("gas: ");
-  // Serial.print(gasJoystick.getOutput());
-  // Serial.print(" ");
-
-  // Serial.print("steering: ");
-  // Serial.print(steeringJoystick.getOutput());
-  // Serial.print(" ");
-  //  Serial.print(" ");
-  //  Serial.print("brakeStepper position: ");
-  //  Serial.print(brakeStepper.currentPosition());
-  //  Serial.print(" ");
-  //  Serial.print("brakeStepper target Position: ");
-  //  Serial.print(brakeStepper.targetPosition());
-  //  Serial.print(" ");
-  //  Serial.print("accel distance: ");
-  //  Serial.print(brakeStepper.distanceToGo());
-  //  Serial.println();
-  //  Serial.print("gearSwitch input: ");
-  //  Serial.print(gearSwitch.getCurrentInput());
-  //  Serial.print(" ");
-  // Serial.print("gear: ");
-  // Serial.print(gearSwitch.getOutput());
-  // Serial.print(" ");
-  //  Serial.print(" ");
-  // Serial.print("tow: ");
-  // Serial.print(towSwitch.getOutput());
-  // Serial.print(" ");
-  // Serial.print("homeMode: ");
-  // Serial.print(homingModeSwitch.getOutput());
-  // Serial.print(" ");
-  // Serial.print("setHome: ");
-  // Serial.print(setHomeSwitch.getOutput());
-
-  // Serial.println();
-  //}
-  if (homingModeSwitch.getOutput() && !config::DISABLE_HOMING_MODE) // If the top left switch is off run the homing function
-  {
-    // Serial.println("start");
-    homingMode();
-    // Serial.println("end");
-  }
-  else // Otherwise run the normal operation
-  {
-    // if it has been long enough since the last input check get the new inputs
-    if (millis() - lastInputCheck >= config::INPUT_REFRESH_RATE)
-    {
-      lastInputCheck = millis(); // Update the last input check time
-
-      //! This code is for debugging purposes only
-      unsigned long start = millis();
-      //!
-
-      updateFilters();
-
-      // Get the input for the gas joystick and output it to the motor
-      int gasInput{gasJoystick.getOutput()};
-      if (gearSwitch.getOutput() == 1 && gasInput < 0)
-      {
-        gasInput = 0;
-      }
-      else if (gearSwitch.getOutput() == -1 && gasInput > 0)
-      {
-        gasInput = 0;
-      }
-      else if (gearSwitch.getOutput() == 0)
-      {
-        gasInput = 0;
-      }
-      if (gasInput != 0)
-      {
-        digitalWrite(config::FOOT_SWITCH_OUTPUT_PIN, HIGH);
-        analogWrite(config::MAIN_MOTOR_OUPTUT_PIN, utilities::map(abs(gasInput), 0, 100, config::MINIMUM_OUTPUT_FOR_MAIN_MOTOR_THROTTLE, 255));
-      }
-      else
-      {
-        digitalWrite(config::FOOT_SWITCH_OUTPUT_PIN, LOW);
-        analogWrite(config::MAIN_MOTOR_OUPTUT_PIN, 0);
-      }
-      // End of gas input
-
-      // Get the input for the brake joystick and output it to the motor
-      if ((gearSwitch.getOutput() == 1 || gearSwitch.getOutput() == 0) && gasJoystick.getOutput() < 0)
-      {
-        brakeStepper.moveToInRange(-gasJoystick.getOutput());
-      }
-      else if (gearSwitch.getOutput() == -1 && gasJoystick.getOutput() > 0)
-      {
-        brakeStepper.moveToInRange(gasJoystick.getOutput());
-      }
-      else
-      {
-        brakeStepper.moveToInRange(0);
-      }
-      // End of brake input
-
-      steeringStepper.moveToInRange(steeringJoystick.getOutput());         // Set the target for the steering stepper
-      digitalWrite(config::TOW_SWITCH_OUTPUT_PIN, !towSwitch.getOutput()); // Set the tow switch output
-
-      // set the gear switch output
-      if (gearSwitch.getOutput() == 0)
-      {
-        digitalWrite(config::FORWARD_SWITCH_OUTPUT_PIN, LOW);
-        digitalWrite(config::REVERSE_SWITCH_OUTPUT_PIN, LOW);
-      }
-      else if (gearSwitch.getOutput() == 1)
-      {
-        digitalWrite(config::FORWARD_SWITCH_OUTPUT_PIN, HIGH);
-        digitalWrite(config::REVERSE_SWITCH_OUTPUT_PIN, LOW);
-      }
-      else if (gearSwitch.getOutput() == -1)
-      {
-        digitalWrite(config::FORWARD_SWITCH_OUTPUT_PIN, LOW);
-        digitalWrite(config::REVERSE_SWITCH_OUTPUT_PIN, HIGH);
-      }
-      //! This code is for debugging purposes only
-      // Serial.println(millis() - start);
-      //!
-    }
-
-    // Run the stepper motors
-    brakeStepper.runThreshold();
-    steeringStepper.runThreshold();
-  }
-} // End of main loop
-=======
   Serial.println(leftEncoder.getPosition());
   // delay(1000);
   // leftEncoder.recordPositions();
@@ -378,7 +230,26 @@ void loop()
 //     steeringStepper.runThreshold();
 //   }
 // } // End of main loop
->>>>>>> Stashed changes
+
+void driveStraight()
+{
+  int newSteeringInput = straightDrive.update(getRightEncodervalue() - getLeftEncodervalue());
+  if (abs(newSteeringInput) > 100)
+  {
+    newSteeringInput = 100 * utilities::sign(newSteeringInput);
+  }
+  steeringStepper.moveInRange(newSteeringInput);
+}
+
+int getLeftEncodervalue()
+{
+  return 0;
+}
+
+int getRightEncodervalue()
+{
+  return 0;
+}
 
 /**
  * A function to set the home positions of the steppers
