@@ -8,9 +8,11 @@ namespace config
     inline constexpr int FORWARD_SWITCH_PIN{34};          // The pin the forward switch is connected to
     inline constexpr int REVERSE_SWITCH_PIN{36};          // The pin the reverse switch is connected to
     inline constexpr int FOOT_SWITCH_PIN{38};             // The pin the tow switch is connected to
-    inline constexpr int THROTTLE_HIHG_REFERENCE_PIN{40}; // The pin the throttle high reference is connected to
+    inline constexpr int THROTTLE_HIGH_REFERENCE_PIN{40}; // The pin the throttle high reference is connected to
     inline constexpr int THROTTLE_WIPER_PIN{42};          // The pin the throttle wiper is connected to
     inline constexpr int THROTTLE_LOW_REFERENCE_PIN{44};  // The pin the throttle low reference is connected to
+
+    // Brake potentiometer
 
     // bourns encoder constants
     inline constexpr int LEFT_ENCODER_PIN_1{11}; // The left encoder pin 1

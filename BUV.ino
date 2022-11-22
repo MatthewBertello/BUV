@@ -1,7 +1,6 @@
 #include <PPMReader.h>
 #include <AccelStepper.h>
 #include <MultiStepper.h>
-#include <ACE128.h>
 
 #include "RcInput.h"
 #include "Stepper.h"
@@ -9,6 +8,7 @@
 #include "utilities.h"
 #include "PID.h"
 #include "BournsEncoder.h"
+#include "Potentiometer.h"
 
 #include "medianFilter.h"
 
@@ -45,6 +45,9 @@ BournsEncoder leftEncoder{config::LEFT_ENCODER_PIN_1,
                           config::LEFT_ENCODER_PIN_6,
                           config::LEFT_ENCODER_PIN_7,
                           config::LEFT_ENCODER_PIN_8};
+
+// Setup the Brake potentiometer
+Potentiometer brakePot = Potentiometer();
 
 // !This code is for debugging purposes only
 // unsigned long lastPrint;
@@ -249,6 +252,26 @@ int getLeftEncoderValue()
 int getRightEncoderValue()
 {
   return 0;
+}
+
+/**
+ * A function to home the brake servo
+ */
+void homeBrakeServo()
+{
+  while (abs(brakePot.position() - brakePot.zeroPosition) > brakePot.threshold)
+  {
+    if (brakePot.position() > brakePot.zeroPosition)
+    {
+      brakeStepper.runSpeedPercentage(10);
+    }
+    else
+    {
+      brakeStepper.runSpeedPercentage(-10);
+    }
+  }
+  brakeStepper.runSpeedPercentage(0);
+  brakeStepper.setCurrentPosition(0);
 }
 
 /**
